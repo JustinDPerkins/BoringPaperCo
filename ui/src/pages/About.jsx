@@ -27,7 +27,7 @@ function About() {
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',
-        background: `linear-gradient(135deg, ${DESIGN_TOKENS.colors.primary.main}, ${DESIGN_TOKENS.colors.primary.dark})`,
+        background: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)',
         py: DESIGN_TOKENS.spacing.xl
       }}
     >
@@ -222,7 +222,7 @@ function About() {
               <CardMedia
                 component="img"
                 height="300"
-                image="/images/files.png"
+                image="/images/paper_1.png"
                 alt="File Upload Scanning"
                 sx={{ 
                   objectFit: 'contain', 

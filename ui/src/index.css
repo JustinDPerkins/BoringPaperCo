@@ -1,13 +1,11 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Crimson Text", "Vollkorn", "Bitter", "Rokkitt", Georgia, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #000c40, #00419e);
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
   min-height: 100vh;
-  color: #e6e6e6;
+  color: #f5f1e8;
 }
 
 code {
@@ -58,22 +56,15 @@ code {
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Scrollbar styling */
+/* Remove scrollbar styling */
 ::-webkit-scrollbar {
-  width: 12px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+/* For Firefox */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;  /* IE and Edge */
 }
 
 .page-section {
@@ -95,11 +86,11 @@ code {
 
 /* Add more specific color classes for different text types */
 .text-primary {
-  color: #4db8ff;
+  color: #f5f1e8;
 }
 
 .text-secondary {
-  color: #b3d9ff;
+  color: #d4c7b8;
 }
 
 .text-muted {

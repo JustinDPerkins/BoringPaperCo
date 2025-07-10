@@ -2,36 +2,36 @@
 import { createTheme } from '@mui/material/styles';
 
 /* ------------------------------------------------------------------ */
-/*  Design Tokens — NAVY FOCUSED                                       */
+/*  Design Tokens — VINTAGE PAPER COMPANY AESTHETIC                   */
 /* ------------------------------------------------------------------ */
 const DESIGN_TOKENS = {
   /* Colors */
   colors: {
-    /* Deep-navy primary */
+    /* Rich charcoal primary (matching background gradient) */
     primary: {
-      light: '#3358b8',   // muted royal
-      main:  '#0d2c6b',   // rich navy (default)
-      dark:  '#030e26',   // almost-black navy
-      contrastText: '#ffffff'
+      light: '#2a2a2a',   // lighter charcoal (gradient start)
+      main:  '#1a1a1a',   // darker charcoal (gradient end)
+      dark:  '#0f0f0f',   // deepest charcoal
+      contrastText: '#f5f1e8'
     },
 
-    /* Neutral greys for secondary */
+    /* Warm beige/cream for secondary */
     secondary: {
-      light: '#eceff4',
-      main:  '#9ea4ad',
-      dark:  '#43484f',
-      contrastText: '#000000'
+      light: '#f9f6f0',
+      main:  '#e6ddd1',
+      dark:  '#d4c7b8',
+      contrastText: '#3a3632'
     },
 
-    /* Backgrounds */
+    /* Dark charcoal backgrounds */
     background: {
-      default: '#070b14',  // page background
-      paper:   '#101620'   // cards/dialogs
+      default: '#1a1a1a',  // rich charcoal black (main page)
+      paper:   '#2a2a2a'   // slightly lighter charcoal (cards)
     },
 
     text: {
-      primary: '#e6e9f0',
-      secondary: '#9aa1b2'
+      primary: '#f5f1e8',   // warm cream text
+      secondary: '#d4c7b8'  // lighter cream text
     },
 
     /* Greys (unchanged) */
@@ -47,7 +47,7 @@ const DESIGN_TOKENS = {
 
   /* Typography */
   typography: {
-    fontFamily: 'Inter, Roboto, Arial, sans-serif',
+    fontFamily: '"Crimson Text", "Vollkorn", "Bitter", "Rokkitt", Georgia, serif',
     fontWeights: {
       light: 300,
       regular: 400,
@@ -85,13 +85,13 @@ const DESIGN_TOKENS = {
     full: 9999
   },
 
-  /* Shadows tuned for dark UI */
+  /* Shadows with subtle glow for dark UI */
   shadows: {
-    sm:  '0 1px 3px rgba(0,0,0,0.24)',
-    md:  '0 4px 8px rgba(0,0,0,0.28)',
-    lg:  '0 10px 20px rgba(0,0,0,0.32)',
-    xl:  '0 20px 32px rgba(0,0,0,0.38)',
-    '2xl':'0 32px 48px rgba(0,0,0,0.45)'
+    sm:  '0 2px 8px rgba(0,0,0,0.3), 0 0 4px rgba(245,241,232,0.05)',
+    md:  '0 4px 16px rgba(0,0,0,0.4), 0 0 8px rgba(245,241,232,0.1)',
+    lg:  '0 8px 32px rgba(0,0,0,0.5), 0 0 16px rgba(245,241,232,0.15)',
+    xl:  '0 16px 48px rgba(0,0,0,0.6), 0 0 24px rgba(245,241,232,0.2)',
+    '2xl':'0 24px 64px rgba(0,0,0,0.7), 0 0 32px rgba(245,241,232,0.25)'
   }
 };
 
@@ -114,7 +114,7 @@ const theme = createTheme({
 
   /* Typography scale mapped to tokens */
   typography: {
-    fontFamily: DESIGN_TOKENS.typography.fontFamily,
+    fontFamily: '"Crimson Text", "Vollkorn", "Bitter", "Rokkitt", Georgia, serif',
     h1: {
       fontSize: DESIGN_TOKENS.typography.fontSize['4xl'],
       fontWeight: DESIGN_TOKENS.typography.fontWeights.bold,
@@ -162,38 +162,62 @@ const theme = createTheme({
 
   /* Component tweaks */
   components: {
-    /* Lifted cards on hover */
+    /* Dark modern cards with glow */
     MuiCard: {
       styleOverrides: {
         root: {
-          background: 'rgba(255,255,255,0.04)',
+          background: 'linear-gradient(145deg, #2a2a2a, #1f1f1f)',
+          border: '1px solid rgba(245, 241, 232, 0.1)',
+          borderRadius: '12px',
           transition: 'all 0.3s ease',
           '&:hover': {
             transform: 'translateY(-8px)',
-            boxShadow: DESIGN_TOKENS.shadows.lg
+            boxShadow: '0 12px 30px rgba(245, 241, 232, 0.15), 0 0 20px rgba(245, 241, 232, 0.1)',
+            border: '1px solid rgba(245, 241, 232, 0.2)'
           }
         }
       }
     },
 
-    /* Rounded, weight-balanced buttons */
+    /* Classic, rounded buttons */
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: DESIGN_TOKENS.borderRadius.md,
+          borderRadius: DESIGN_TOKENS.borderRadius.lg,
           textTransform: 'none',
-          fontWeight: DESIGN_TOKENS.typography.fontWeights.medium
+          fontWeight: DESIGN_TOKENS.typography.fontWeights.medium,
+          fontFamily: '"Crimson Text", "Vollkorn", "Bitter", "Rokkitt", Georgia, serif',
+          color: '#f5f1e8'
         }
       }
     },
 
-    /* Gradient AppBar matching new navy palette */
+    /* Glowing white AppBar */
     MuiAppBar: {
       styleOverrides: {
         root: {
-          background: 'linear-gradient(90deg,#030e26 0%,#0d2c6b 100%)',
-          boxShadow: DESIGN_TOKENS.shadows.md,
-          backdropFilter: 'blur(10px)'
+          background: 'linear-gradient(135deg, #f9f6f0 0%, #f5f1e8 100%) !important',
+          color: '#3a3632 !important',
+          boxShadow: '0 4px 20px rgba(245, 241, 232, 0.4), 0 0 40px rgba(245, 241, 232, 0.6)',
+          borderBottom: '1px solid rgba(58, 54, 50, 0.1)',
+          backdropFilter: 'blur(10px)',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%)',
+            zIndex: -1
+          },
+          '& .MuiToolbar-root': {
+            backgroundColor: 'transparent !important'
+          },
+          '& .MuiButton-root': {
+            color: '#3a3632 !important'
+          }
         }
       }
     }

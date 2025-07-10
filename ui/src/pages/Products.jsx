@@ -101,7 +101,7 @@ function Products() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: `linear-gradient(135deg, ${DESIGN_TOKENS.colors.primary.main}, ${DESIGN_TOKENS.colors.primary.dark})`,
+        background: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)',
         py: DESIGN_TOKENS.spacing.xl
       }}
     >

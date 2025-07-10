@@ -90,19 +90,22 @@ function Upload() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: `linear-gradient(135deg, ${DESIGN_TOKENS.colors.primary.main}, ${DESIGN_TOKENS.colors.primary.dark})`,
+        background: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)',
         py: DESIGN_TOKENS.spacing.xl
       }}
     >
-      <Container maxWidth="sm">
+      <Container maxWidth="xl">
         <Card
           sx={{
+            width: '100%',
+            maxWidth: 1000,
             background: 'rgba(0,0,0,0.3)',
             backdropFilter: 'blur(15px)',
             borderRadius: DESIGN_TOKENS.borderRadius.lg,
             boxShadow: DESIGN_TOKENS.shadows.xl,
             border: '1px solid rgba(255,255,255,0.1)',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            mx: 'auto'
           }}
         >
           <CardContent sx={{ p: DESIGN_TOKENS.spacing.lg }}>

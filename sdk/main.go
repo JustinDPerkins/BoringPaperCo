@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
-	tm "github.com/trendmicro/tm-v1-fs-golang-sdk"
+	amaasclient "github.com/trendmicro/tm-v1-fs-golang-sdk"
 )
 
 const (
@@ -142,7 +142,7 @@ func scanUploadedFile(filePath string) (string, error) {
 	start := time.Now()
 
 	// Initialize client
-	c, err := tm.NewClient(apiKey, region)
+	c, err := amaasclient.NewClient(apiKey, region)
 	if err != nil {
 		log.Printf("Failed to create client: %v", err)
 		return "", err

@@ -1,6 +1,8 @@
 module terminal
 
-go 1.21.3
+go 1.23.0
+
+toolchain go1.23.11
 
 require (
 	github.com/creack/pty v1.1.24
