@@ -40,7 +40,7 @@ export default function ChatBot() {
 
     try {
       // Fetch response from backend
-      const response = await fetch(`${process.env.VITE_AICHAT_URL || 'http://localhost:5001'}/chat`, {
+      const response = await fetch('/api/chat/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

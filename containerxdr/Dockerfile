@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM --platform=linux/amd64 golang:latest
 
 # Set noninteractive installation mode
 ENV DEBIAN_FRONTEND=noninteractive
@@ -27,8 +27,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 
-# Build the application
-RUN go build -o main .
+# Build the application for AMD64 (AKS compatibility)
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
 
 # Expose the port the app runs on
 EXPOSE 8081

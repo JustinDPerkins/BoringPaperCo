@@ -12,7 +12,11 @@ import (
 )
 
 var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool { return true }, // TODO: tighten for prod
+	CheckOrigin: func(r *http.Request) bool {
+		// Only allow connections from UI frontend
+		origin := r.Header.Get("Origin")
+		return origin == "http://ui-service" || origin == ""
+	},
 }
 
 func terminalWS(w http.ResponseWriter, r *http.Request) {

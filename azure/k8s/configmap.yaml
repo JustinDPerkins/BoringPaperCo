@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: boring-paper-co
+data:
+  OLLAMA_HOST: "0.0.0.0"
+  OLLAMA_ORIGINS: "*"
+  OLLAMA_URL: "http://ollama-service:11434"
+  VITE_API_BASE_URL: "/api/sdk"
+  VITE_OLLAMA_URL: "/api/ollama"
+  VITE_AICHAT_URL: "/api/chat"
+  VITE_XDR_WS_URL: "/api/xdr/terminal" 

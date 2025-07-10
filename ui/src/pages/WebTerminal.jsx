@@ -17,7 +17,11 @@ export default function WebTerminal({ onClose }) {
     term.open(termRef.current);
     fitAddon.fit();
 
-    const ws = new WebSocket('ws://localhost:8081/terminal');
+    // Use current host for WebSocket connection (relative to current page)
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsHost = window.location.host;
+    const xdrUrl = `${wsProtocol}//${wsHost}/api/xdr/terminal`;
+    const ws = new WebSocket(xdrUrl);
     ws.binaryType = 'arraybuffer';
 
     ws.onopen    = ()   => term.focus();
