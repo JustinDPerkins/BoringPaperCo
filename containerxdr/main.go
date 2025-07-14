@@ -22,30 +22,62 @@ var upgrader = websocket.Upgrader{
 			return true
 		}
 		
-		// Allow internal service connections
-		if origin == "http://ui-service" || origin == "https://ui-service" {
-			return true
+		// Define allowed origins (matching aichat's secure pattern)
+		allowedOrigins := []string{
+			// Internal service communication
+			"http://ui-service",
+			"https://ui-service", 
+			"http://ollama-service",
+			"https://ollama-service",
+			// AWS ELB patterns
+			"http://*.elb.amazonaws.com",
+			"https://*.elb.amazonaws.com",
+			// Azure patterns
+			"http://*.cloudapp.azure.com",
+			"https://*.cloudapp.azure.com",
+			// GCP patterns  
+			"http://*.run.app",
+			"https://*.run.app",
+			// Development
+			"http://localhost",
+			"https://localhost",
+		}
+		
+		// Check exact matches first
+		for _, allowed := range allowedOrigins {
+			if allowed == origin {
+				return true
+			}
+		}
+		
+		// Check wildcard patterns (for cloud load balancers)
+		for _, allowed := range allowedOrigins {
+			if strings.Contains(allowed, "*") {
+				// Extract the domain part after the wildcard
+				// "http://*.cloudapp.azure.com" → ".cloudapp.azure.com"
+				parts := strings.Split(allowed, "*")
+				if len(parts) == 2 && strings.Contains(origin, parts[1]) {
+					// Also check the protocol matches
+					if strings.HasPrefix(origin, parts[0]) {
+						return true
+					}
+				}
+			}
 		}
 		
 		// Check for configured allowed origins from environment
-		allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
-		if allowedOrigins != "" {
-			for _, allowed := range strings.Split(allowedOrigins, ",") {
+		if envOrigins := os.Getenv("ALLOWED_ORIGINS"); envOrigins != "" {
+			for _, allowed := range strings.Split(envOrigins, ",") {
 				if strings.TrimSpace(allowed) == origin {
 					return true
 				}
 			}
 		}
 		
-		// For development/testing: allow localhost and load balancers
-		if strings.Contains(origin, "localhost") || 
-		   strings.Contains(origin, "127.0.0.1") ||
+		// Allow development IPs
+		if strings.Contains(origin, "127.0.0.1") ||
 		   strings.Contains(origin, "192.168.") ||
-		   strings.Contains(origin, "10.0.") ||
-		   strings.Contains(origin, ".elb.amazonaws.com") ||
-		   strings.Contains(origin, ".cloudapp.azure.com") ||
-		   strings.Contains(origin, ".run.app") ||
-		   strings.Contains(origin, "20.242.248.123") {
+		   strings.Contains(origin, "10.0.") {
 			return true
 		}
 		

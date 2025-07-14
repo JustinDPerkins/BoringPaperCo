@@ -89,4 +89,4 @@ echo "   kubectl apply -f secret.yaml"
 
 echo ""
 echo "📍 To get Load Balancer IP:"
-echo "kubectl get service -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'" 
+echo "kubectl get service -n ingress-nginx ingress-nginx-controller'" 

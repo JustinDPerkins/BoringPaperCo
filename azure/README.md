@@ -1,6 +1,6 @@
 # Boring Paper Co - Azure AKS Deployment
 
-This directory contains the Azure AKS deployment configuration for the Boring Paper Co application, featuring automated ACR creation and multi-cloud compatibility.
+This directory contains the Azure AKS deployment configuration for the Boring Paper Co application.
 
 ## 🏗️ Architecture
 
