@@ -1,6 +1,6 @@
 # Boring Paper Co - AWS EKS Deployment
 
-This directory contains the AWS EKS deployment configuration for the Boring Paper Co application, successfully migrated from Azure AKS.
+This directory contains the AWS EKS deployment configuration for the Boring Paper Co application.
 
 ## Architecture
 
@@ -152,7 +152,6 @@ kubectl get service ingress-nginx-controller -n ingress-nginx -o jsonpath='{.sta
 
 ### Alternative Files (Not Used)
 - `deploy.sh` - Complex AWS ALB approach (use manual deployment instead)
-- `alb-controller.yaml` - AWS Load Balancer Controller (not needed with NGINX)
 
 ## Load Balancer Setup
 
@@ -168,11 +167,6 @@ The deployment uses **NGINX Ingress Controller** with AWS Classic ELB for simpli
 - `/api/ollama/*` → Ollama service
 - `/api/xdr/*` → ContainerXDR service (WebSocket support)
 
-**Key Features**:
-- ✅ WebSocket support for terminal functionality
-- ✅ CORS configured for multi-cloud deployments  
-- ✅ Simple setup, no AWS-specific dependencies
-- ✅ Works identically across AWS, Azure, GCP
 
 ### Access Your Application
 
@@ -263,64 +257,6 @@ kubectl logs -f -l app=ui -n boring-paper-co
 kubectl logs -f deployment/ingress-nginx-controller -n ingress-nginx
 ```
 
-### Scaling
-
-```bash
-# Scale a deployment
-kubectl scale deployment ui --replicas=3 -n boring-paper-co
-
-# Check resource usage
-kubectl top nodes
-kubectl top pods -n boring-paper-co
-```
-
-## Cost Optimization
-
-### Instance Types
-- Default: `t3.medium` (2 vCPU, 4 GB RAM)
-- For production: Consider `m5.large` or `c5.large`
-- For development: `t3.small` may be sufficient
-
-### Storage
-- PVC uses `gp2` storage class (General Purpose SSD)
-- Ollama requires 20GB for model storage
-- Shared storage: 10GB for general use
-
-### Auto Scaling
-- Node group scales from 1-5 nodes based on demand
-- Consider enabling cluster autoscaler for cost optimization
-
-## Differences from Azure AKS
-
-| Component | Azure AKS | AWS EKS | Notes |
-|-----------|-----------|---------|-------|
-| Container Registry | ACR | ECR | Similar workflow, different URLs |
-| Load Balancer | NGINX Ingress | **NGINX Ingress** | Same! Simplified for consistency |
-| Storage Class | `azurefile` | `gp2` (EBS) | Required EBS CSI driver setup |
-| Authentication | Service Principal | IAM Roles | More complex IAM permissions |
-| Networking | kubenet | AWS VPC CNI | More native cloud integration |
-| Volume Provisioning | Automatic | **Manual CSI setup** | Required extra Terraform config |
-| CORS Origins | `.cloudapp.azure.com` | `.elb.amazonaws.com` | Updated service code |
-
-### Key Migration Insights
-
-**What Worked the Same:**
-- ✅ NGINX Ingress Controller (avoided AWS ALB complexity)  
-- ✅ Application code and container images
-- ✅ Kubernetes manifests (minimal changes)
-- ✅ Service mesh and internal networking
-
-**What Required Changes:**
-- 🔧 **EBS CSI Driver**: Required IAM role configuration for PVC support
-- 🔧 **CORS Origins**: Updated `aichat` and `containerxdr` for `.elb.amazonaws.com`
-- 🔧 **ECR Authentication**: Different docker login process
-- 🔧 **Resource Limits**: Adjusted for different node sizes
-
-**Lessons Learned:**
-- Simple approaches (NGINX) work better than cloud-specific ones (ALB)
-- EBS volume provisioning needs more setup than Azure Files
-- Multi-cloud CORS configuration prevents migration headaches
-- Terraform automation is crucial for reproducible infrastructure
 
 ## Cleanup
 
@@ -338,18 +274,3 @@ cd ../iac
 terraform destroy
 ```
 
-## Support
-
-For issues or questions:
-1. Check AWS EKS documentation
-2. Review CloudWatch logs
-3. Verify IAM permissions
-4. Check security group rules
-
-## Next Steps
-
-1. Set up monitoring with CloudWatch or Prometheus
-2. Configure backup for persistent volumes
-3. Implement GitOps with ArgoCD or Flux
-4. Set up CI/CD pipeline
-5. Configure network policies for security 

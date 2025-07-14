@@ -1,6 +1,6 @@
 # Boring Paper Co - Azure AKS Deployment
 
-This directory contains the Azure AKS deployment configuration for the Boring Paper Co application, featuring automated ACR creation and multi-cloud compatibility.
+This directory contains the Azure AKS deployment configuration for the Boring Paper Co application.
 
 ## 🏗️ Architecture
 
@@ -88,12 +88,24 @@ chmod +x *.sh
 ### 2. Deploy to AKS
 
 ```bash
-# Deploy core infrastructure
+# Automated deployment (recommended)
+./deploy.sh
+
+# This automatically:
+# - Installs NGINX Ingress Controller
+# - Adds Azure DNS label for stable FQDN  
+# - Updates image references to use Terraform ACR
+# - Deploys all services and configurations
+# - Shows application URLs when complete
+```
+
+### Manual Deployment (Alternative)
+
+```bash
+# If you prefer manual control
 kubectl apply -f namespace.yaml
 kubectl apply -f configmap.yaml
 kubectl apply -f secret.yaml
-
-# Deploy storage
 kubectl apply -f pvc.yaml
 
 # Deploy all services
@@ -103,7 +115,6 @@ kubectl apply -f sdk-deployment.yaml
 kubectl apply -f ui-deployment.yaml
 kubectl apply -f ollama-deployment.yaml
 
-# Configure NGINX ingress and routing
 kubectl apply -f ingress.yaml
 ```
 
@@ -158,12 +169,27 @@ The deployment uses **NGINX Ingress Controller** for simplified, reliable routin
 
 ### Access Your Application
 
-```bash
-# Get your application URL
-kubectl get ingress -n boring-paper-co -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'
+**After running `./deploy.sh`, you'll see:**
 
-# Or get the service IP directly  
+```bash
+🌟 Deployment Complete!
+
+🔗 Access your application:
+   🌐 FQDN: http://boring-paper-azure.eastus.cloudapp.azure.com/
+   📍 IP:   http://51.8.234.55/
+
+🖥️  Terminal: ws://boring-paper-azure.eastus.cloudapp.azure.com/api/xdr/terminal
+🤖 Chat API: http://boring-paper-azure.eastus.cloudapp.azure.com/api/chat
+📚 SDK API:  http://boring-paper-azure.eastus.cloudapp.azure.com/api/sdk
+```
+
+**Manual URL Discovery:**
+```bash
+# Get load balancer IP
 kubectl get service ingress-nginx-controller -n ingress-nginx
+
+# Azure FQDN (stable across deployments)  
+echo "http://boring-paper-azure.eastus.cloudapp.azure.com/"
 ```
 
 ### SSL/TLS Configuration (Optional)
@@ -219,9 +245,15 @@ kubectl exec -n boring-paper-co -l app=aichat -- curl -s http://ollama-service:1
 ```
 
 **3. CORS Errors (403 Forbidden)**
-- Services include CORS support for Azure patterns (`.cloudapp.azure.com`, public IPs)
-- If deploying to different domains, update CORS origins in service code
-- Services with CORS: `aichat`, `containerxdr`
+- ✅ **Fixed**: Services now include standardized CORS for Azure FQDN patterns
+- **Supported Origins**: `*.cloudapp.azure.com`, `*.elb.amazonaws.com`, `*.run.app`
+- **WebSocket Terminal**: Now works with Azure DNS labels (`boring-paper-azure.eastus.cloudapp.azure.com`)
+- **Services with CORS**: `aichat`, `containerxdr` (both standardized)
+
+```bash
+# Check CORS logs if needed
+kubectl logs -n boring-paper-co -l app=containerxdr | grep "origin"
+```
 
 **4. WebSocket Connection Failures**
 ```bash
@@ -247,10 +279,17 @@ kubectl logs -f deployment/ingress-nginx-controller -n ingress-nginx
 
 ### Access Applications
 
-Get your load balancer IP and access:
+**Recommended (Azure FQDN - Stable):**
+- **UI**: `http://boring-paper-azure.eastus.cloudapp.azure.com/`
+- **SDK API**: `http://boring-paper-azure.eastus.cloudapp.azure.com/api/sdk`
+- **XDR Terminal**: `ws://boring-paper-azure.eastus.cloudapp.azure.com/api/xdr/terminal`
+- **Chat API**: `http://boring-paper-azure.eastus.cloudapp.azure.com/api/chat`
+- **Ollama API**: `http://boring-paper-azure.eastus.cloudapp.azure.com/api/ollama`
+
+**Alternative (Load Balancer IP):**
 - **UI**: `http://[load-balancer-ip]/`
 - **SDK API**: `http://[load-balancer-ip]/api/sdk`
-- **XDR Terminal**: `http://[load-balancer-ip]/api/xdr`
+- **XDR Terminal**: `ws://[load-balancer-ip]/api/xdr/terminal`
 - **Chat API**: `http://[load-balancer-ip]/api/chat`
 - **Ollama API**: `http://[load-balancer-ip]/api/ollama`
 
@@ -288,38 +327,11 @@ terraform destroy
 
 ### Utility Scripts
 - `build-and-push.sh` - Build Docker images and push to Terraform-created ACR
-- `deploy.sh` - Manual deployment script for all resources
+- `deploy.sh` - **Automated deployment script** with DNS label and image reference updates
+- `update-image-refs.sh` - Updates deployment files to use Terraform ACR (called by deploy.sh)
 
-### Legacy Files (Obsolete)
-- `setup-acr.sh` - ⚠️ **OBSOLETE** - ACR setup now handled by Terraform automatically
-
-## 🔄 Azure vs AWS Comparison
-
-| Component | Azure AKS | AWS EKS | Notes |
-|-----------|-----------|---------|-------|
-| Container Registry | **ACR (Terraform)** | ECR (Terraform) | Now automated on both! |
-| Load Balancer | NGINX Ingress | NGINX Ingress | Same approach for consistency |
-| Storage Class | `azurefile` | `gp2` (EBS) | Different underlying storage |
-| Authentication | Managed Identity | IAM Roles | Azure simpler for ACR integration |
-| Networking | kubenet | AWS VPC CNI | Both work well |
-| Volume Provisioning | **Automatic** | Manual CSI setup | Azure advantage |
-| CORS Origins | `.cloudapp.azure.com` | `.elb.amazonaws.com` | Multi-cloud CORS support |
-
-### Key Migration Insights
-
-**What Works the Same:**
-- ✅ NGINX Ingress Controller (consistent approach across clouds)
-- ✅ Application code and container images
-- ✅ Kubernetes manifests (minimal changes needed)
-- ✅ Service mesh and internal networking
-
-**Azure Advantages:**
-- 🚀 **Simpler ACR integration** - Built-in managed identity support
-- 🚀 **Automatic volume provisioning** - No CSI driver setup required
-- 🚀 **Unified billing** - All Azure services in one account
-
-**Lessons Learned:**
-- Simple approaches (NGINX) work better than cloud-specific ones
-- Terraform automation is crucial for reproducible infrastructure  
-- Multi-cloud CORS configuration prevents migration headaches
-- Consistent architecture reduces operational complexity 
+### Features
+- ✅ **Azure DNS Label**: Provides stable FQDN instead of changing IPs
+- ✅ **Automated ACR Integration**: Uses Terraform outputs for container registry
+- ✅ **Multi-cloud CORS**: Standardized across AWS/Azure/GCP patterns
+- ✅ **Zero-config Deployment**: Single command deploys everything
