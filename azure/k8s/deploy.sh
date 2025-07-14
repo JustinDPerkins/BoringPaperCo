@@ -17,12 +17,20 @@ fi
 echo "📦 Installing NGINX Ingress Controller..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 
+# Add Azure DNS label for stable FQDN (instead of changing IP)
+echo "🏷️  Adding Azure DNS label for stable FQDN..."
+kubectl patch service ingress-nginx-controller -n ingress-nginx -p '{"metadata":{"annotations":{"service.beta.kubernetes.io/azure-dns-label-name":"boring-paper-azure"}}}'
+
 # Wait for ingress controller to be ready
 echo "⏳ Waiting for NGINX Ingress Controller to be ready..."
 kubectl wait --namespace ingress-nginx \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=controller \
   --timeout=90s
+
+# Update image references to use Terraform-created ACR
+echo "🔄 Updating image references..."
+./update-image-refs.sh
 
 # Deploy application resources
 echo "📋 Deploying application resources..."
@@ -55,8 +63,21 @@ echo "🔗 Ingress:"
 kubectl get ingress -n boring-paper-co
 
 echo ""
-echo "📝 Next steps:"
-echo "1. Update your DNS to point to the ingress IP"
-echo "2. Build and push your container images to a registry"
-echo "3. Update image references in the deployment files"
-echo "4. Add your API_KEY and REGION to secret.yaml" 
+echo "🌟 Deployment Complete!"
+echo ""
+
+# Get ingress IP
+INGRESS_IP=$(kubectl get service -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || echo "pending")
+
+# Azure FQDN (from DNS label)
+AZURE_FQDN="boring-paper-azure.eastus.cloudapp.azure.com"
+
+echo "🔗 Access your application:"
+echo "   🌐 FQDN: http://$AZURE_FQDN/"
+echo "   📍 IP:   http://$INGRESS_IP/"
+echo ""
+echo "🖥️  Terminal: ws://$AZURE_FQDN/api/xdr/terminal"
+echo "🤖 Chat API: http://$AZURE_FQDN/api/chat"
+echo "📚 SDK API:  http://$AZURE_FQDN/api/sdk"
+echo ""
+echo "✨ Multi-cloud CORS and Azure DNS label working!" 
