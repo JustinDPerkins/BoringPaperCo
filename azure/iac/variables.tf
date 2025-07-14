@@ -27,3 +27,15 @@ variable "username" {
   description = "The admin username for the new cluster."
   default     = "azureadmin"
 }
+
+variable "acr_repositories" {
+  type        = list(string)
+  description = "List of container repositories to create in ACR"
+  default     = ["ui", "sdk", "containerxdr", "aichat", "ollama"]
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment name"
+  default     = "production"
+}

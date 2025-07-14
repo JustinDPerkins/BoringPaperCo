@@ -1,11 +1,25 @@
 #!/bin/bash
 
-# Boring Paper Co - ACR Setup Script
-# This script attaches your ACR to your AKS cluster for seamless image pulling
+# ⚠️  OBSOLETE - This script is no longer needed!
+# ACR creation and AKS integration is now handled by Terraform automatically.
+# 
+# The ../iac/main.tf file now includes:
+# - azurerm_container_registry resource (creates ACR)
+# - azurerm_role_assignment resource (gives AKS pull access)
+#
+# Just run: terraform apply
+# Then use: ./build-and-push.sh
 
-set -e
-
-echo "🔗 Setting up ACR integration with AKS..."
+echo "🚫 This script is OBSOLETE!"
+echo ""
+echo "✅ ACR setup is now handled automatically by Terraform"
+echo "   Run 'terraform apply' in ../iac directory instead"
+echo ""
+echo "📝 Next steps:"
+echo "1. cd ../iac && terraform apply"
+echo "2. ./build-and-push.sh"
+echo "3. ./deploy.sh"
+exit 0
 
 # Configuration
 ACR_NAME="boringrepo"

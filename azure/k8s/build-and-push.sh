@@ -4,19 +4,19 @@
 
 set -e
 
-# Configuration
-ACR_NAME="boringrepo"  # Your ACR name
-RESOURCE_GROUP="boring_paper_acr_rg"  # Your ACR resource group
-
 echo "🐳 Building and pushing Docker images to ACR..."
+
+# Get ACR information from Terraform outputs
+echo "📋 Getting ACR information from Terraform..."
+ACR_NAME=$(cd ../iac && terraform output -raw acr_name)
+ACR_SERVER=$(cd ../iac && terraform output -raw acr_login_server)
+
+echo "📡 ACR Name: $ACR_NAME"
+echo "📡 ACR Server: $ACR_SERVER"
 
 # Login to ACR
 echo "🔐 Logging into ACR..."
 az acr login --name $ACR_NAME
-
-# Get ACR server URL
-ACR_SERVER=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query "loginServer" --output tsv)
-echo "📡 ACR Server: $ACR_SERVER"
 
 # Build and push each service
 services=("sdk" "containerxdr" "ui" "aichat")
@@ -44,9 +44,15 @@ for service in "${services[@]}"; do
 done
 
 echo ""
-echo "🎉 All images built and pushed!"
+echo "🎉 All images built and pushed to Terraform-created ACR!"
 echo ""
-echo "📝 Next step: Update image references in your deployment files:"
+echo "📝 Images pushed to:"
 for service in "${services[@]}"; do
-    echo "  $service: $ACR_SERVER/boringpaperco/$service:latest"
-done 
+    echo "  ✅ $service: $ACR_SERVER/boringpaperco/$service:latest"
+done
+echo ""
+echo "🚀 Next steps:"
+echo "1. Update deployment YAML files with these image URLs (if needed)"
+echo "2. Run './deploy.sh' to deploy to AKS"
+echo ""
+echo "💡 Note: AKS has automatic pull access via Terraform role assignment" 
