@@ -73,9 +73,24 @@ func main() {
 	// Create Echo instance
 	e := echo.New()
 
-	// CORS Middleware - restricted to UI frontend only
+	// CORS Middleware - allow multiple cloud platforms
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://ui-service", "http://ollama-service"}, // Allow UI frontend and ollama service
+		AllowOrigins: []string{
+			"http://ui-service", 
+			"http://ollama-service",
+			// AWS ELB patterns
+			"http://*.elb.amazonaws.com",
+			"https://*.elb.amazonaws.com",
+			// Azure patterns
+			"http://*.cloudapp.azure.com",
+			"https://*.cloudapp.azure.com",
+			// GCP patterns  
+			"http://*.run.app",
+			"https://*.run.app",
+			// Development
+			"http://localhost",
+			"https://localhost",
+		}, // Allow UI frontend, ollama service, and cloud load balancers
 		AllowMethods: []string{
 			http.MethodGet, 
 			http.MethodPost, 

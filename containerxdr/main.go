@@ -4,7 +4,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/creack/pty"
@@ -13,9 +15,42 @@ import (
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		// Only allow connections from UI frontend
 		origin := r.Header.Get("Origin")
-		return origin == "http://ui-service" || origin == ""
+		
+		// Always allow empty origin (direct connections)
+		if origin == "" {
+			return true
+		}
+		
+		// Allow internal service connections
+		if origin == "http://ui-service" || origin == "https://ui-service" {
+			return true
+		}
+		
+		// Check for configured allowed origins from environment
+		allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
+		if allowedOrigins != "" {
+			for _, allowed := range strings.Split(allowedOrigins, ",") {
+				if strings.TrimSpace(allowed) == origin {
+					return true
+				}
+			}
+		}
+		
+		// For development/testing: allow localhost and load balancers
+		if strings.Contains(origin, "localhost") || 
+		   strings.Contains(origin, "127.0.0.1") ||
+		   strings.Contains(origin, "192.168.") ||
+		   strings.Contains(origin, "10.0.") ||
+		   strings.Contains(origin, ".elb.amazonaws.com") ||
+		   strings.Contains(origin, ".cloudapp.azure.com") ||
+		   strings.Contains(origin, ".run.app") ||
+		   strings.Contains(origin, "20.242.248.123") {
+			return true
+		}
+		
+		log.Printf("WebSocket origin rejected: %s", origin)
+		return false
 	},
 }
 
@@ -63,6 +98,7 @@ func terminalWS(w http.ResponseWriter, r *http.Request) {
 	time.Sleep(200 * time.Millisecond)
 	_ = cmd.Process.Kill()
 }
+
 func main() {
 	http.HandleFunc("/terminal", terminalWS)
 	log.Println("WS PTY ready on :8081/terminal")

@@ -31,3 +31,5 @@ terraform.tfvars.backup.backup
 terraform.tfvars.backup.backup.backup
 terraform.tfvars.backup.backup.backup.backup
 terraform.tfvars.backup.backup.backup.backup.backup
+
+tfplan
