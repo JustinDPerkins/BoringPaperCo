@@ -107,56 +107,29 @@ BoringPaperCo/
 - **Terraform automation** for infrastructure
 - **Multi-cloud CORS** support in services
 
-### 🔐 **Production-Ready Security**
-- WebSocket support for real-time terminal access
-- Container registry integration (ECR, ACR)
-- Kubernetes network policies and secrets
-- HTTPS/TLS ready configurations
-
 ### 🤖 **AI-Powered Features**  
 - **Ollama integration** with phi:latest model
 - **Chat interface** with natural language processing
 - **Containerized AI** - fully portable across clouds
 
-### 🛠️ **Developer Experience**
-- **One-command deployment** per cloud
-- **Terraform automation** - no manual setup
-- **Local development** with Docker Compose
-- **Comprehensive documentation** with troubleshooting
 
 ## 🏆 Migration Success Story
 
-This project demonstrates a **successful migration** from Azure AKS to AWS EKS, learning key lessons:
+This project can demonstrate a **simple migration** from CSP to CSP, learning key lessons:
 
-| Challenge | Solution | Result |
-|-----------|----------|---------|
-| **Complex AWS ALB** | Simplified with NGINX Ingress | ✅ Works identically on all clouds |
-| **EBS Volume Issues** | Added EBS CSI driver IAM role | ✅ Persistent storage working |
-| **CORS Errors** | Updated origins for multi-cloud | ✅ Services work across load balancers |
-| **WebSocket Failures** | Configured upgrade headers | ✅ Terminal functionality restored |
+**Securing Cluster Migrations**: Simple, consistent security implementations.
 
-**Key Insight**: Simple, consistent approaches work better than cloud-specific complexity.
-
-## 🌍 Live Deployments
-
-### AWS EKS Environment
-- **Cluster**: `boring-paper-cluster-b7zkmk` (us-west-2)
-- **Load Balancer**: `afb9b6963a5144388a094323dfc1a95d-732090510.us-west-2.elb.amazonaws.com`
-- **Status**: All services operational, Ollama model loaded
-- **Features**: ✅ Chat API, ✅ WebSocket terminal, ✅ File uploads
-
-### Azure AKS Environment  
-- **Cluster**: `boring-paper-cluster-ubdi` (eastus)
-- **Load Balancer**: `20.242.248.123` (Azure Public IP)
-- **Status**: All services operational, stable for 4+ days
-- **Features**: ✅ Chat API, ✅ WebSocket terminal, ✅ File uploads
 
 ### Multi-Cloud Context Switching
 ```bash
-# Switch between cloud environments
-kubectl config use-context arn:aws:eks:us-west-2:975050242527:cluster/boring-paper-cluster-b7zkmk  # AWS
-kubectl config use-context boring-paper-cluster-ubdi                                              # Azure  
-kubectl config use-context gke_justin-dev-412922_us-central1_boringpaperco-gcp                    # GCP (soon)
+# Ensure Kube Context is correct for the cluster you may be interacting with
+kubectl config current-context
+
+# List all available contexts
+kubectl config get-contexts
+
+# Switch Kube Contexts
+kubectl config use-context <Name to switch to>
 ```
 
 ## 🛠️ Technology Stack
@@ -199,15 +172,6 @@ kubectl config use-context gke_justin-dev-412922_us-central1_boringpaperco-gcp  
 
 Each cloud has identical functionality but uses cloud-native services where appropriate.
 
-## 🤝 Contributing
-
-This repository demonstrates **production-ready multi-cloud patterns**. Key areas for contribution:
-
-- **GCP GKE implementation** (following AWS/Azure patterns)
-- **Monitoring and observability** across clouds
-- **CI/CD pipeline** for multi-cloud deployments  
-- **Security enhancements** (network policies, RBAC)
-- **Performance optimizations**
 
 ## 📈 Roadmap
 
