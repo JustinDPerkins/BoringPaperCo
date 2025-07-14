@@ -176,10 +176,7 @@ Each cloud has identical functionality but uses cloud-native services where appr
 ## 📈 Roadmap
 
 - [ ] **GCP GKE Deployment** - Complete the multi-cloud trilogy
-- [ ] **CI/CD Pipeline** - Automated deployments via GitHub Actions
-- [ ] **Monitoring Stack** - Prometheus/Grafana across all clouds
-- [ ] **Service Mesh** - Istio for advanced traffic management
-- [ ] **GitOps** - ArgoCD for declarative deployments
+- [ ] **CI/CD Pipeline** - Automated deployments via Respective CI tools
 
 ---
 
