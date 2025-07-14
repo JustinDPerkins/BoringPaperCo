@@ -58,7 +58,7 @@ function Upload() {
 
     try {
       setIsLoading(true);
-      const res = await fetch('http://localhost:5000/upload', {
+      const res = await fetch('/api/sdk/upload', {
         method: 'POST',
         body: formData
       });

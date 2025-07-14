@@ -73,13 +73,24 @@ func main() {
 	// Create Echo instance
 	e := echo.New()
 
-	// CORS Middleware with more permissive settings
+	// CORS Middleware - allow multiple cloud platforms
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{
-			"http://localhost:8080",   // UI service
-			"http://127.0.0.1:8080",   // Localhost variations
-			"*",                       // Wildcard for development (remove in production)
-		},
+			"http://ui-service", 
+			"http://ollama-service",
+			// AWS ELB patterns
+			"http://*.elb.amazonaws.com",
+			"https://*.elb.amazonaws.com",
+			// Azure patterns
+			"http://*.cloudapp.azure.com",
+			"https://*.cloudapp.azure.com",
+			// GCP patterns  
+			"http://*.run.app",
+			"https://*.run.app",
+			// Development
+			"http://localhost",
+			"https://localhost",
+		}, // Allow UI frontend, ollama service, and cloud load balancers
 		AllowMethods: []string{
 			http.MethodGet, 
 			http.MethodPost, 
@@ -90,8 +101,10 @@ func main() {
 			echo.HeaderContentType,
 			echo.HeaderAccept,
 			echo.HeaderAuthorization,
+			"X-Requested-With",
 		},
-		AllowCredentials: true,
+		AllowCredentials: false, // Set to false when using wildcard origins
+		MaxAge: 86400,
 	}))
 
 	// Middleware
@@ -99,6 +112,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Routes
+	e.GET("/health", handleHealth)
 	e.POST("/chat", handleChat)
 
 	// Start server
@@ -107,6 +121,13 @@ func main() {
 		port = "5001"
 	}
 	e.Logger.Fatal(e.Start(":" + port))
+}
+
+func handleHealth(c echo.Context) error {
+	return c.JSON(http.StatusOK, map[string]string{
+		"status":  "healthy",
+		"service": "aichat",
+	})
 }
 
 func handleChat(c echo.Context) error {

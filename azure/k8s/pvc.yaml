@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-data
+  namespace: boring-paper-co
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: managed-csi  # Azure managed disk
+  resources:
+    requests:
+      storage: 50Gi  # Ollama models can be large 

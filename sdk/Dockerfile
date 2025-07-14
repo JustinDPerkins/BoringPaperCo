@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine AS builder
+FROM --platform=linux/amd64 golang:1.21-alpine AS builder
 
 # Install necessary tools
 RUN apk add --no-cache git curl
@@ -15,11 +15,11 @@ RUN go mod download
 # Copy the source code
 COPY . .
 
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o main
+# Build the application for AMD64 (AKS compatibility)
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main
 
 # Final stage
-FROM alpine:latest
+FROM --platform=linux/amd64 alpine:latest
 
 # Install necessary runtime dependencies
 RUN apk add --no-cache ca-certificates

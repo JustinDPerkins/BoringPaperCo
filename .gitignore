@@ -1,4 +1,4 @@
-.env
+*/.env
 
 uploads/
 
@@ -11,3 +11,25 @@ uploads/
 */.env.development.local
 */.env.test.local
 */.env.production.local
+
+node_modules/
+*.DS_Store
+*.log
+dist/
+build/
+
+azure/k8s/overrides.yaml
+
+# ignore teffaform inits
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+terraform.tfvars.backup
+terraform.tfvars.backup.backup
+terraform.tfvars.backup.backup.backup
+terraform.tfvars.backup.backup.backup.backup
+terraform.tfvars.backup.backup.backup.backup.backup
+
+tfplan

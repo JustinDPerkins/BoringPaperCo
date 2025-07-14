@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM --platform=linux/amd64 golang:latest
 
 WORKDIR /app
 
@@ -14,8 +14,8 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application
-RUN go build -o main .
+# Build the application for AMD64 (AKS compatibility)
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
 
 # Expose port
 EXPOSE 5001

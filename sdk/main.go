@@ -25,6 +25,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", rootHandler)
+	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/upload", uploadHandler)
 
@@ -34,6 +35,12 @@ func main() {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://ui-service")
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintln(w, `{"status":"healthy","service":"sdk"}`)
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -48,10 +55,12 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
-	// Enable CORS for testing
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	// Enable CORS for UI frontend only
+	w.Header().Set("Access-Control-Allow-Origin", "http://ui-service")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With")
+	w.Header().Set("Access-Control-Expose-Headers", "Content-Length")
+	w.Header().Set("Access-Control-Max-Age", "86400")
 
 	// Handle preflight requests
 	if r.Method == http.MethodOptions {
