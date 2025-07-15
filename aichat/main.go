@@ -73,24 +73,32 @@ func main() {
 	// Create Echo instance
 	e := echo.New()
 
+	// Build allowed origins dynamically
+	allowedOrigins := []string{
+		"http://ui-service", 
+		"http://ollama-service",
+		// AWS ELB patterns
+		"http://*.elb.amazonaws.com",
+		"https://*.elb.amazonaws.com",
+		// Azure patterns
+		"http://*.cloudapp.azure.com",
+		"https://*.cloudapp.azure.com",
+		// GCP patterns  
+		"http://*.run.app",
+		"https://*.run.app",
+		// Development
+		"http://localhost",
+		"https://localhost",
+	}
+	
+	// Add specific load balancer IP for GCP
+	if loadBalancerIP := os.Getenv("LOAD_BALANCER_IP"); loadBalancerIP != "" {
+		allowedOrigins = append(allowedOrigins, "http://"+loadBalancerIP, "https://"+loadBalancerIP)
+	}
+
 	// CORS Middleware - allow multiple cloud platforms
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{
-			"http://ui-service", 
-			"http://ollama-service",
-			// AWS ELB patterns
-			"http://*.elb.amazonaws.com",
-			"https://*.elb.amazonaws.com",
-			// Azure patterns
-			"http://*.cloudapp.azure.com",
-			"https://*.cloudapp.azure.com",
-			// GCP patterns  
-			"http://*.run.app",
-			"https://*.run.app",
-			// Development
-			"http://localhost",
-			"https://localhost",
-		}, // Allow UI frontend, ollama service, and cloud load balancers
+		AllowOrigins: allowedOrigins, // Allow UI frontend, ollama service, and cloud load balancers
 		AllowMethods: []string{
 			http.MethodGet, 
 			http.MethodPost, 

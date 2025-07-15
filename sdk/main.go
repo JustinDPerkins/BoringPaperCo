@@ -18,6 +18,49 @@ const (
 	maxUploadSize = 10 << 20 // 10 MB
 )
 
+// setCORSHeaders sets appropriate CORS headers for multi-cloud support
+func setCORSHeaders(w http.ResponseWriter, r *http.Request) {
+	origin := r.Header.Get("Origin")
+	
+	// Define allowed origins
+	allowedOrigins := []string{
+		"http://ui-service",
+		"https://ui-service",
+		// AWS ELB patterns
+		"http://*.elb.amazonaws.com",
+		"https://*.elb.amazonaws.com",
+		// Azure patterns
+		"http://*.cloudapp.azure.com",
+		"https://*.cloudapp.azure.com",
+		// GCP patterns  
+		"http://*.run.app",
+		"https://*.run.app",
+		// Development
+		"http://localhost",
+		"https://localhost",
+	}
+	
+	// Add specific load balancer IP for GCP
+	if loadBalancerIP := os.Getenv("LOAD_BALANCER_IP"); loadBalancerIP != "" {
+		allowedOrigins = append(allowedOrigins, "http://"+loadBalancerIP, "https://"+loadBalancerIP)
+	}
+	
+	// Check if origin is allowed
+	allowed := false
+	for _, allowedOrigin := range allowedOrigins {
+		if origin == allowedOrigin {
+			allowed = true
+			break
+		}
+	}
+	
+	if allowed {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+	} else {
+		w.Header().Set("Access-Control-Allow-Origin", "http://ui-service") // Default fallback
+	}
+}
+
 func main() {
 	// Ensure upload directory exists
 	if err := os.MkdirAll(uploadFolder, os.ModePerm); err != nil {
@@ -38,7 +81,8 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://ui-service")
+	// Set CORS headers for health endpoint
+	setCORSHeaders(w, r)
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, `{"status":"healthy","service":"sdk"}`)
 }
@@ -55,8 +99,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
-	// Enable CORS for UI frontend only
-	w.Header().Set("Access-Control-Allow-Origin", "http://ui-service")
+	// Set CORS headers for multi-cloud support
+	setCORSHeaders(w, r)
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With")
 	w.Header().Set("Access-Control-Expose-Headers", "Content-Length")

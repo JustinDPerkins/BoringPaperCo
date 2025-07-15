@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aichat
+  namespace: boring-paper-co
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aichat
+  template:
+    metadata:
+      labels:
+        app: aichat
+    spec:
+      containers:
+      - name: aichat
+        image: us-central1-docker.pkg.dev/justin-dev-412922/boringpaperco-aichat/boringpaperco/aichat:latest
+        ports:
+        - containerPort: 5001
+        envFrom:
+        - configMapRef:
+            name: app-config
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aichat-service
+  namespace: boring-paper-co
+spec:
+  selector:
+    app: aichat
+  ports:
+  - port: 5001
+    targetPort: 5001
+  type: ClusterIP 

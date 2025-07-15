@@ -4,7 +4,7 @@ metadata:
   name: containerxdr
   namespace: boring-paper-co
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: containerxdr
@@ -15,9 +15,12 @@ spec:
     spec:
       containers:
       - name: containerxdr
-        image: boringpapercoumjjbd.azurecr.io/boringpaperco/containerxdr:latest
+        image: us-central1-docker.pkg.dev/justin-dev-412922/boringpaperco-containerxdr/boringpaperco/containerxdr:latest
         ports:
         - containerPort: 8081
+        envFrom:
+        - configMapRef:
+            name: app-config
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

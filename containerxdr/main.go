@@ -81,6 +81,13 @@ var upgrader = websocket.Upgrader{
 			return true
 		}
 		
+		// Allow specific load balancer IP from environment (for GCP/direct IP access)
+		if loadBalancerIP := os.Getenv("LOAD_BALANCER_IP"); loadBalancerIP != "" {
+			if origin == "http://"+loadBalancerIP || origin == "https://"+loadBalancerIP {
+				return true
+			}
+		}
+		
 		log.Printf("WebSocket origin rejected: %s", origin)
 		return false
 	},

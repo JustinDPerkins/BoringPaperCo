@@ -1,26 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aichat
+  name: sdk
   namespace: boring-paper-co
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aichat
+      app: sdk
   template:
     metadata:
       labels:
-        app: aichat
+        app: sdk
     spec:
       containers:
-      - name: aichat
-        image: boringpapercoumjjbd.azurecr.io/boringpaperco/aichat:latest
+      - name: sdk
+        image: us-central1-docker.pkg.dev/justin-dev-412922/boringpaperco-sdk/boringpaperco/sdk:latest
         ports:
-        - containerPort: 5001
+        - containerPort: 5000
         envFrom:
         - configMapRef:
             name: app-config
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: API_KEY
+        - name: REGION
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: REGION
         resources:
           requests:
             memory: "256Mi"
@@ -32,12 +43,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: aichat-service
+  name: sdk-service
   namespace: boring-paper-co
 spec:
   selector:
-    app: aichat
+    app: sdk
   ports:
-  - port: 5001
-    targetPort: 5001
+  - port: 5000
+    targetPort: 5000
   type: ClusterIP 

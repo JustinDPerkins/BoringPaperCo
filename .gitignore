@@ -33,3 +33,9 @@ terraform.tfvars.backup.backup.backup.backup
 terraform.tfvars.backup.backup.backup.backup.backup
 
 tfplan
+
+# ignore all k8s .bak files
+*.yaml.bak
+**/*.yaml.bak
+*.bak
+**/*.bak

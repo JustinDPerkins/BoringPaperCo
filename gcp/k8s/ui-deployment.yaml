@@ -4,7 +4,7 @@ metadata:
   name: ui
   namespace: boring-paper-co
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: ui
@@ -15,18 +15,15 @@ spec:
     spec:
       containers:
       - name: ui
-        image: boringpapercoumjjbd.azurecr.io/boringpaperco/ui:latest
+        image: us-central1-docker.pkg.dev/justin-dev-412922/boringpaperco-ui/boringpaperco/ui:latest
         ports:
         - containerPort: 80
-        envFrom:
-        - configMapRef:
-            name: app-config
         resources:
           requests:
-            memory: "128Mi"
+            memory: "64Mi"
             cpu: "100m"
           limits:
-            memory: "256Mi"
+            memory: "128Mi"
             cpu: "200m"
 ---
 apiVersion: v1

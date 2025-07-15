@@ -2,7 +2,7 @@
 
 [![AWS EKS](https://img.shields.io/badge/AWS%20EKS-Deployed-success?style=for-the-badge&logo=amazon-aws&logoColor=white)](./aws/)
 [![Azure AKS](https://img.shields.io/badge/Azure%20AKS-Deployed-success?style=for-the-badge&logo=microsoft-azure&logoColor=white)](./azure/)
-[![GCP GKE](https://img.shields.io/badge/GCP%20GKE-Coming%20Soon-yellow?style=for-the-badge&logo=google-cloud&logoColor=white)](#)
+[![GCP GKE](https://img.shields.io/badge/GCP%20GKE-Deployed-success?style=for-the-badge&logo=google-cloud&logoColor=white)](./gcp/)
 
 [![Terraform](https://img.shields.io/badge/Terraform-Infrastructure-blue?style=flat-square&logo=terraform)](./aws/iac/)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-blue?style=flat-square&logo=kubernetes)](./aws/k8s/)
@@ -14,7 +14,7 @@
   <img src="ui/public/images/bpclogo.png" alt="Boring Paper Co Logo" width="300">
 </div>
 
-A production-ready, multi-cloud microservices application demonstrating **consistent deployment patterns** across AWS EKS, Azure AKS, and Google Cloud GKE.
+A production-ready, multi-cloud microservices application demonstrating **consistent deployment patterns** across AWS EKS, Azure AKS, and Google Cloud GKE. **Complete trilogy** - all three clouds implemented!
 
 ## 🏗️ Architecture
 
@@ -34,9 +34,9 @@ The Boring Paper Co application consists of **5 microservices** deployed identic
 ┌─────────────┬─────────────┬─────────────┐
 │   AWS EKS   │  Azure AKS  │  GCP GKE   │
 ├─────────────┼─────────────┼─────────────┤
-│ ✅ Running  │ ✅ Running  │ 🚧 Planned │
+│ ✅ Running  │ ✅ Running  │ ✅ Running │
 │             │             │             │
-│ ECR Registry│ ACR Registry│ GCR Registry│
+│ ECR Registry│ ACR Registry│ Artifact Reg│
 │ EBS Volumes │ Azure Files │ GCP Disks   │
 │ Classic ELB │ Azure LB    │ GCP LB      │
 │ VPC + Subnets│ VNet + Subnets│ VPC + Subnets│
@@ -60,7 +60,6 @@ cd ../k8s
 ./build-and-push.sh
 kubectl apply -f .
 ```
-**Status**: ✅ **Production Ready** - All services running, chat API and WebSocket terminal functional
 
 ### Azure AKS Deployment
 ```bash
@@ -73,14 +72,18 @@ cd ../k8s
 ./build-and-push.sh
 kubectl apply -f .
 ```
-**Status**: ✅ **Production Ready** - All services running, recently updated with Terraform ACR
 
 ### GCP GKE Deployment  
 ```bash
-# Coming Soon! 🚧
-# Following the same proven patterns from AWS/Azure
+# 1. Infrastructure (with Artifact Registry automation)
+cd gcp/iac
+terraform init && terraform apply
+
+# 2. Build & Deploy
+cd ../k8s  
+./build-and-push.sh
+./deploy.sh
 ```
-**Status**: 🚧 **Planned** - Will use same NGINX approach for consistency
 
 ## 📁 Repository Structure
 
@@ -92,11 +95,13 @@ BoringPaperCo/
 ├── ☁️  azure/  
 │   ├── iac/           # Terraform: AKS + ACR + VNet
 │   └── k8s/           # Kubernetes manifests + scripts  
-├── 🔧 aichat/         # AI Chat service (Go + Ollama)
+├── 🔧 gcp/
+│   ├── iac/           # Terraform: GKE + Artifact Registry + VPC
+│   └── k8s/           # Kubernetes manifests + scripts
+├── 🔮 aichat/         # AI Chat service (Go + Ollama)
 ├── 🔒 containerxdr/   # Security monitoring (Go + WebSocket)
 ├── 🖥️  ui/            # React frontend
 ├── ⚙️  sdk/           # Core API backend (Go)
-├── 🧠 ollama/         # LLM inference service
 └── 🐳 local/          # Docker Compose for local dev
 ```
 
@@ -113,13 +118,16 @@ BoringPaperCo/
 - **Chat interface** with natural language processing
 - **Containerized AI** - fully portable across clouds
 
+### 🏗️ **Cloud-Optimized Deployments**
+- **AWS**: Regional EKS with EBS CSI driver
+- **Azure**: Regional AKS with Azure Files
+- **GCP**: Zonal GKE with optimized e2-standard-4 nodes for cost efficiency
 
 ## 🏆 Migration Success Story
 
 This project can demonstrate a **simple migration** from CSP to CSP, learning key lessons:
 
 **Securing Cluster Migrations**: Simple, consistent security implementations.
-
 
 ### Multi-Cloud Context Switching
 ```bash
@@ -153,7 +161,7 @@ kubectl config use-context <Name to switch to>
 **Cloud Integration**
 - **AWS**: EKS, ECR, EBS CSI, VPC, Classic ELB
 - **Azure**: AKS, ACR, Azure Files, VNet, Azure LB  
-- **GCP**: GKE, GCR, GCP Disks, VPC, GCP LB *(coming soon)*
+- **GCP**: GKE, Artifact Registry, GCP Disks, VPC, GCP LB
 
 ## 📋 Prerequisites
 
@@ -165,19 +173,13 @@ kubectl config use-context <Name to switch to>
 
 ## 🚀 Getting Started
 
-1. **Choose your cloud** (AWS or Azure currently supported)
-2. **Navigate to cloud directory** (`./aws/` or `./azure/`)  
+1. **Choose your cloud** (AWS, Azure, or GCP - all fully supported)
+2. **Navigate to cloud directory** (`./aws/`, `./azure/`, or `./gcp/`)  
 3. **Follow the README** in that directory for specific instructions
 4. **Deploy infrastructure** with Terraform
 5. **Build and deploy services** with provided scripts
 
 Each cloud has identical functionality but uses cloud-native services where appropriate.
-
-
-## 📈 Roadmap
-
-- [ ] **GCP GKE Deployment** - Complete the multi-cloud trilogy
-- [ ] **CI/CD Pipeline** - Automated deployments via Respective CI tools
 
 ---
 
