@@ -19,6 +19,8 @@ dist/
 build/
 
 azure/k8s/overrides.yaml
+aws/k8s/overrides.yaml
+gcp/k8s/overrides.yaml
 
 # ignore teffaform inits
 .terraform/

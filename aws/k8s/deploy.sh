@@ -51,6 +51,33 @@ else
     echo "✅ EBS CSI Driver already installed"
 fi
 
+# Annotate EBS CSI Driver service account with IAM role
+echo "🔧 Annotating EBS CSI Driver service account..."
+# Get the EBS CSI Driver role ARN from Terraform output
+cd ../iac
+EBS_CSI_ROLE_ARN=$(terraform output -raw ebs_csi_driver_role_arn 2>/dev/null || echo "")
+cd ../k8s
+
+if [[ -n "$EBS_CSI_ROLE_ARN" ]]; then
+    echo "   Using IAM role ARN: $EBS_CSI_ROLE_ARN"
+    kubectl annotate serviceaccount ebs-csi-controller-sa -n kube-system eks.amazonaws.com/role-arn="$EBS_CSI_ROLE_ARN" --overwrite
+    
+    # Restart EBS CSI controller pods to pick up the new annotation
+    echo "🔄 Restarting EBS CSI controller pods..."
+    kubectl delete pods -n kube-system -l app=ebs-csi-controller --ignore-not-found=true
+    
+    echo "⏳ Waiting for EBS CSI controller pods to be ready..."
+    kubectl wait --namespace kube-system \
+        --for=condition=ready pod \
+        --selector=app=ebs-csi-controller \
+        --timeout=300s
+else
+    echo "⚠️  Could not get EBS CSI Driver role ARN from Terraform. Please run:"
+    echo "   cd ../iac && terraform output ebs_csi_driver_role_arn"
+    echo "   Then manually annotate the service account:"
+    echo "   kubectl annotate serviceaccount ebs-csi-controller-sa -n kube-system eks.amazonaws.com/role-arn=<role-arn>"
+fi
+
 # Deploy application resources (same as Azure!)
 echo "📋 Deploying application resources..."
 
