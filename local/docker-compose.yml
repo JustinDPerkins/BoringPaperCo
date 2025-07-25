@@ -81,6 +81,7 @@ services:
       - ollama-service
     environment:
       - OLLAMA_URL=http://ollama-service:11434
+      - API_KEY=${API_KEY}
     restart: unless-stopped
     networks:
       - bpc-net

@@ -18,9 +18,9 @@ node_modules/
 dist/
 build/
 
-azure/k8s/overrides.yaml
-aws/k8s/overrides.yaml
-gcp/k8s/overrides.yaml
+azure/overrides.yaml
+aws/overrides.yaml
+gcp/overrides.yaml
 
 # ignore teffaform inits
 .terraform/

@@ -3,8 +3,10 @@ kind: Deployment
 metadata:
   name: containerxdr
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: containerxdr
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: containerxdr
+        cloud-provider: aws
     spec:
       containers:
       - name: containerxdr
@@ -46,6 +49,8 @@ kind: Service
 metadata:
   name: containerxdr-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
   selector:
     app: containerxdr

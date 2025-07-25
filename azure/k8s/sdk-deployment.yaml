@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: sdk
   namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
 spec:
   replicas: 2
   selector:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: sdk
+        cloud-provider: azure
     spec:
       containers:
       - name: sdk
@@ -42,6 +45,8 @@ kind: Service
 metadata:
   name: sdk-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
 spec:
   selector:
     app: sdk

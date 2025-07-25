@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: aichat
   namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
 spec:
   replicas: 1
   selector:
@@ -12,12 +14,19 @@ spec:
     metadata:
       labels:
         app: aichat
+        cloud-provider: azure
     spec:
       containers:
       - name: aichat
         image: boringpapercoumjjbd.azurecr.io/boringpaperco/aichat:latest
         ports:
         - containerPort: 5001
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: API_KEY
         envFrom:
         - configMapRef:
             name: app-config
@@ -34,6 +43,8 @@ kind: Service
 metadata:
   name: aichat-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
 spec:
   selector:
     app: aichat

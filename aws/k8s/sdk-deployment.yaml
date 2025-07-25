@@ -3,8 +3,10 @@ kind: Deployment
 metadata:
   name: sdk
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: sdk
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: sdk
+        cloud-provider: aws
     spec:
       containers:
       - name: sdk
@@ -45,6 +48,8 @@ kind: Service
 metadata:
   name: sdk-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
   selector:
     app: sdk

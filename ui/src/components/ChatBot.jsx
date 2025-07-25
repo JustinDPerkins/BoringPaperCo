@@ -48,11 +48,18 @@ export default function ChatBot() {
         body: JSON.stringify({ message: inputValue }),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        // Handle specific error cases
+        if (response.status === 403) {
+          // Show the actual blocked message from the API
+          addMessage(`⚠️ ${data.response}`, 'bot');
+        } else {
+          addMessage('Sorry, I encountered an error. Could you try again?', 'bot');
+        }
+        return;
+      }
       
       // Add bot response
       addMessage(data.response);

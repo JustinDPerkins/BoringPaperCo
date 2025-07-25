@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: ollama
   namespace: boring-paper-co
+  labels:
+    cloud-provider: gcp
 spec:
   replicas: 1
   selector:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: ollama
+        cloud-provider: gcp
     spec:
       initContainers:
       - name: model-downloader
@@ -68,6 +71,8 @@ kind: Service
 metadata:
   name: ollama-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: gcp
 spec:
   selector:
     app: ollama

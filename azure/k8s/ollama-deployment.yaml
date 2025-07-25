@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: ollama
   namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
 spec:
   replicas: 1  # Ollama typically runs as single instance
   selector:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: ollama
+        cloud-provider: azure
     spec:
       initContainers:
       - name: model-downloader
@@ -56,6 +59,8 @@ kind: Service
 metadata:
   name: ollama-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
 spec:
   selector:
     app: ollama

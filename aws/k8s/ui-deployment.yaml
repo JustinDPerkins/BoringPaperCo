@@ -3,8 +3,10 @@ kind: Deployment
 metadata:
   name: ui
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: ui
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: ui
+        cloud-provider: aws
     spec:
       containers:
       - name: ui
@@ -34,6 +37,8 @@ kind: Service
 metadata:
   name: ui-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
   selector:
     app: ui

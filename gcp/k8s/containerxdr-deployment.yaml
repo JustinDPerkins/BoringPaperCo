@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: containerxdr
   namespace: boring-paper-co
+  labels:
+    cloud-provider: gcp
 spec:
   replicas: 1
   selector:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: containerxdr
+        cloud-provider: gcp
     spec:
       containers:
       - name: containerxdr
@@ -46,6 +49,8 @@ kind: Service
 metadata:
   name: containerxdr-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: gcp
 spec:
   selector:
     app: containerxdr

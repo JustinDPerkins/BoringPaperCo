@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: ollama-data
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
   accessModes:
     - ReadWriteOnce
@@ -16,6 +18,8 @@ kind: Deployment
 metadata:
   name: ollama
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
   replicas: 1  # Ollama typically runs as single instance
   selector:
@@ -25,6 +29,7 @@ spec:
     metadata:
       labels:
         app: ollama
+        cloud-provider: aws
     spec:
       initContainers:
       - name: model-downloader
@@ -54,10 +59,10 @@ spec:
           mountPath: /root/.ollama
         resources:
           requests:
-            memory: "1Gi"
+            memory: "2Gi"
             cpu: "500m"
           limits:
-            memory: "3Gi"
+            memory: "6Gi"
             cpu: "1500m"
       volumes:
       - name: ollama-data
@@ -69,6 +74,8 @@ kind: Service
 metadata:
   name: ollama-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: aws
 spec:
   selector:
     app: ollama

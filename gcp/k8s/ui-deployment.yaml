@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: ui
   namespace: boring-paper-co
+  labels:
+    cloud-provider: gcp
 spec:
   replicas: 1
   selector:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: ui
+        cloud-provider: gcp
     spec:
       containers:
       - name: ui
@@ -31,6 +34,8 @@ kind: Service
 metadata:
   name: ui-service
   namespace: boring-paper-co
+  labels:
+    cloud-provider: gcp
 spec:
   selector:
     app: ui
