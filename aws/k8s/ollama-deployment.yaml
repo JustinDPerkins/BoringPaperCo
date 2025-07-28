@@ -37,10 +37,10 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - |
-            echo "Downloading phi:latest model..."
+            echo "Downloading tinyllama:1.1b-chat model (smaller, faster)..."
             ollama serve &
             sleep 10
-            ollama pull phi:latest
+            ollama pull tinyllama:1.1b-chat
             echo "Model download complete"
             pkill ollama
         volumeMounts:
