@@ -46,6 +46,21 @@ func initAIGuard() *AIGuardConfig {
 	}
 }
 
+// getModelName returns the model to use, with fallback to smaller models
+func getModelName() string {
+	// Check for environment variable first
+	if model := os.Getenv("OLLAMA_MODEL"); model != "" {
+		return model
+	}
+
+	// Default to a smaller, efficient model
+	// Options in order of preference (smallest to largest):
+	// - tinyllama:1.1b-chat: ~1.1GB, fast, good for chat
+	// - phi:2.7b: ~1.7GB, good balance
+	// - phi:latest: ~2.7GB, original choice
+	return "tinyllama:1.1b-chat"
+}
+
 // checkAIGuard POSTs to TrendVisionOne, logs and returns true if action=="Block"
 func checkAIGuard(label, content string, cfg *AIGuardConfig) (bool, error) {
 	fmt.Printf("[VisionOne] checking %s: %q\n", label, content)
@@ -91,7 +106,11 @@ func pullModel() error {
 		ollamaURL = "http://localhost:11434"
 	}
 	pullURL := ollamaURL + "/api/pull"
-	reqBody, _ := json.Marshal(map[string]string{"name": "phi:latest"})
+
+	modelName := getModelName()
+	fmt.Printf("[Ollama] Pulling model: %s\n", modelName)
+
+	reqBody, _ := json.Marshal(map[string]string{"name": modelName})
 	res, err := http.Post(pullURL, "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
 		return err
@@ -125,8 +144,9 @@ func handleChat(c echo.Context, guardCfg *AIGuardConfig) error {
 	}
 	genURL := ollamaURL + "/api/generate"
 
+	modelName := getModelName()
 	ollReq := OllamaRequest{
-		Model:  "phi:latest",
+		Model:  modelName,
 		Prompt: fmt.Sprintf("You are a helpful assistant for the Boring Paper Company. %s", req.Message),
 		Stream: true,
 	}

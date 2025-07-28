@@ -27,6 +27,8 @@ spec:
             secretKeyRef:
               name: app-secrets
               key: API_KEY
+        - name: OLLAMA_MODEL
+          value: "tinyllama:1.1b-chat"  # Use smaller model for faster startup
         envFrom:
         - configMapRef:
             name: app-config

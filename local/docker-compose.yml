@@ -81,6 +81,7 @@ services:
       - ollama-service
     environment:
       - OLLAMA_URL=http://ollama-service:11434
+      - OLLAMA_MODEL=tinyllama:1.1b-chat  # Use smaller model for faster startup
       - API_KEY=${API_KEY}
     restart: unless-stopped
     networks:
