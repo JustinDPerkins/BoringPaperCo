@@ -1,0 +1,263 @@
+name: CI Pipeline - Build and Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  UI_CONTAINER_NAME: "ui"
+  SDK_CONTAINER_NAME: "sdk"
+  CONTAINERXDR_CONTAINER_NAME: "containerxdr"
+  AICHAT_CONTAINER_NAME: "aichat"
+  RELEASE: "latest"
+
+permissions:
+  contents: read
+
+jobs:
+  # ───────────────────────────── UI ──────────────────────────────
+  UI:
+    runs-on: ubuntu-latest
+    name: UI Build and Scan
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t ${{ env.UI_CONTAINER_NAME }}:${{ env.RELEASE }} ui/
+
+      - name: Vision One Container Security Scan
+        run: |
+          set -e
+          cd scripts && chmod +x tmas_install.sh && ./tmas_install.sh
+          export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
+          IMAGE_TAR="${UI_CONTAINER_NAME}_${RELEASE}.tar"
+          docker save "${UI_CONTAINER_NAME}:${RELEASE}" > "$IMAGE_TAR"
+          tmas scan "docker-archive:$IMAGE_TAR" -VMS --saveSBOM > result.json
+          mv SBOM_* SBOM.json
+          echo "TMAS Scan Result"
+          cat result.json
+
+      - name: 'Upload Scan Result Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-scan-result-${{ env.UI_CONTAINER_NAME }}
+          path: scripts/result.json
+          retention-days: 30
+
+      - name: 'Upload SBOM Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ env.UI_CONTAINER_NAME }}
+          path: scripts/SBOM.json
+          retention-days: 30
+
+      - name: 'Upload Build Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-container-${{ env.RELEASE }}
+          path: ${{ env.UI_CONTAINER_NAME }}_${{ env.RELEASE }}.tar
+          retention-days: 7
+
+  # ───────────────────────────── SDK ──────────────────────────────
+  SDK:
+    runs-on: ubuntu-latest
+    name: SDK Build and Scan
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t ${{ env.SDK_CONTAINER_NAME }}:${{ env.RELEASE }} sdk/
+
+      - name: Vision One Container Security Scan
+        run: |
+          set -e
+          cd scripts && chmod +x tmas_install.sh && ./tmas_install.sh
+          export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
+          IMAGE_TAR="${SDK_CONTAINER_NAME}_${RELEASE}.tar"
+          docker save "${SDK_CONTAINER_NAME}:${RELEASE}" > "$IMAGE_TAR"
+          tmas scan "docker-archive:$IMAGE_TAR" -VMS --saveSBOM > result.json
+          mv SBOM_* SBOM.json
+          echo "TMAS Scan Result"
+          cat result.json
+
+      - name: 'Upload Scan Result Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-scan-result-${{ env.SDK_CONTAINER_NAME }}
+          path: scripts/result.json
+          retention-days: 30
+
+      - name: 'Upload SBOM Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ env.SDK_CONTAINER_NAME }}
+          path: scripts/SBOM.json
+          retention-days: 30
+
+      - name: 'Upload Build Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdk-container-${{ env.RELEASE }}
+          path: ${{ env.SDK_CONTAINER_NAME }}_${{ env.RELEASE }}.tar
+          retention-days: 7
+
+  # ───────────────────────────── ContainerXDR ──────────────────────────────
+  ContainerXDR:
+    runs-on: ubuntu-latest
+    name: ContainerXDR Build and Scan
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t ${{ env.CONTAINERXDR_CONTAINER_NAME }}:${{ env.RELEASE }} containerxdr/
+
+      - name: Vision One Container Security Scan
+        run: |
+          set -e
+          cd scripts && chmod +x tmas_install.sh && ./tmas_install.sh
+          export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
+          IMAGE_TAR="${CONTAINERXDR_CONTAINER_NAME}_${RELEASE}.tar"
+          docker save "${CONTAINERXDR_CONTAINER_NAME}:${RELEASE}" > "$IMAGE_TAR"
+          tmas scan "docker-archive:$IMAGE_TAR" -VMS --saveSBOM > result.json
+          mv SBOM_* SBOM.json
+          echo "TMAS Scan Result"
+          cat result.json
+
+      - name: 'Upload Scan Result Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-scan-result-${{ env.CONTAINERXDR_CONTAINER_NAME }}
+          path: scripts/result.json
+          retention-days: 30
+
+      - name: 'Upload SBOM Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ env.CONTAINERXDR_CONTAINER_NAME }}
+          path: scripts/SBOM.json
+          retention-days: 30
+
+      - name: 'Upload Build Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: containerxdr-container-${{ env.RELEASE }}
+          path: ${{ env.CONTAINERXDR_CONTAINER_NAME }}_${{ env.RELEASE }}.tar
+          retention-days: 7
+
+  # ───────────────────────────── AI Chat ──────────────────────────────
+  AIChat:
+    runs-on: ubuntu-latest
+    name: AI Chat Build and Scan
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t ${{ env.AICHAT_CONTAINER_NAME }}:${{ env.RELEASE }} aichat/
+
+      - name: Vision One Container Security Scan
+        run: |
+          set -e
+          cd scripts && chmod +x tmas_install.sh && ./tmas_install.sh
+          export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
+          IMAGE_TAR="${AICHAT_CONTAINER_NAME}_${RELEASE}.tar"
+          docker save "${AICHAT_CONTAINER_NAME}:${RELEASE}" > "$IMAGE_TAR"
+          tmas scan "docker-archive:$IMAGE_TAR" -VMS --saveSBOM > result.json
+          mv SBOM_* SBOM.json
+          echo "TMAS Scan Result"
+          cat result.json
+
+      - name: 'Upload Scan Result Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-scan-result-${{ env.AICHAT_CONTAINER_NAME }}
+          path: scripts/result.json
+          retention-days: 30
+
+      - name: 'Upload SBOM Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ env.AICHAT_CONTAINER_NAME }}
+          path: scripts/SBOM.json
+          retention-days: 30
+
+      - name: 'Upload Build Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aichat-container-${{ env.RELEASE }}
+          path: ${{ env.AICHAT_CONTAINER_NAME }}_${{ env.RELEASE }}.tar
+          retention-days: 7
+
+  # ───────────────────────── UNIT TESTS ───────────────────────
+  UnitTests:
+    name: Unit Tests
+    needs: [UI, SDK, ContainerXDR, AIChat]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Test SDK Service
+        run: |
+          echo "🧪 Testing SDK service..."
+          cd sdk
+          go mod tidy
+          go test -v ./...
+      
+      - name: Test AI Chat Service
+        run: |
+          echo "🧪 Testing AI Chat service..."
+          cd aichat
+          go mod tidy
+          go test -v ./...
+      
+      - name: Test ContainerXDR Service
+        run: |
+          echo "🧪 Testing ContainerXDR service..."
+          cd containerxdr
+          go mod tidy
+          go test -v ./...
+      
+      - name: Test UI Dependencies
+        run: |
+          echo "🧪 Testing UI dependencies..."
+          cd ui
+          npm ci
+          npm run test --if-present
+
+  # ───────────────────────── SECURITY SUMMARY ───────────────────────
+  SecuritySummary:
+    name: Security Summary
+    needs: [UI, SDK, ContainerXDR, AIChat]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Generate Security Report
+        run: |
+          echo "🔒 Security Scan Summary for Boring Paper Co"
+          echo "============================================="
+          echo ""
+          echo "✅ All containers built successfully"
+          echo "✅ Vision One security scans completed"
+          echo "✅ SBOM artifacts generated"
+          echo "✅ Container artifacts uploaded"
+          echo ""
+          echo "📋 Next steps for production:"
+          echo "   - Review Vision One scan results"
+          echo "   - Address any high/critical vulnerabilities"
+          echo "   - Review SBOM for license compliance"
+          echo "   - Implement runtime security monitoring"
+          echo ""
+          echo "🚀 Ready for deployment to cloud environments"
