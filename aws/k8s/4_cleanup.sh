@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Boring Paper Co - Cleanup Script
-# Removes all resources deployed by deploy.sh
+# Removes all resources deployed by 3_deploy.sh
 
 set -e
 
@@ -108,4 +108,4 @@ echo ""
 echo "🎉 Ready for fresh deployment!"
 echo ""
 echo "💡 Next steps:"
-echo "   ./deploy.sh    # Deploy everything fresh" 
+echo "   ./3_deploy.sh    # Deploy everything fresh" 

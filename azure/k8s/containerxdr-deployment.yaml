@@ -6,7 +6,7 @@ metadata:
   labels:
     cloud-provider: azure
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: containerxdr

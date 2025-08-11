@@ -52,7 +52,7 @@ for service in "${services[@]}"; do
 done
 echo ""
 echo "🚀 Next steps:"
-echo "1. Update deployment YAML files with these image URLs (if needed)"
-echo "2. Run './deploy.sh' to deploy to AKS"
+echo "1. Run './2_update-image-refs.sh' to update deployment files"
+echo "2. Run './3_deploy.sh' to deploy to AKS"
 echo ""
 echo "💡 Note: AKS has automatic pull access via Terraform role assignment" 

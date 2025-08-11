@@ -30,7 +30,7 @@ kubectl wait --namespace ingress-nginx \
 
 # Update image references to use Terraform-created ACR
 echo "🔄 Updating image references..."
-./update-image-refs.sh
+./2_update-image-refs.sh
 
 # Deploy application resources
 echo "📋 Deploying application resources..."

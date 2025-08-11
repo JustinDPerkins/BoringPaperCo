@@ -26,7 +26,7 @@ kubectl wait --namespace ingress-nginx \
 
 # Update image references to use Terraform-created Artifact Registry
 echo "🔄 Updating image references..."
-./update-image-refs.sh
+./2_update-image-refs.sh
 
 # Deploy application resources
 echo "📋 Deploying application resources..."
@@ -78,7 +78,7 @@ data:
   VITE_AICHAT_URL: "/api/chat"
   VITE_XDR_WS_URL: "/api/xdr/terminal"
   # Multi-cloud CORS support - GCP patterns
-  ALLOWED_ORIGINS: "*.run.app,boringpaper.example.com"
+  ALLOWED_ORIGINS: "http://boringpapercompany.com,http://azure.boringpapercompany.com,http://gcp.boringpapercompany.com"
   # GCP Load Balancer IP for precise CORS (dynamically set)
   LOAD_BALANCER_IP: "$LOAD_BALANCER_IP"
 EOF

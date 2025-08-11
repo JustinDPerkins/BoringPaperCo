@@ -41,6 +41,11 @@ var upgrader = websocket.Upgrader{
 			// Development
 			"http://localhost",
 			"https://localhost",
+
+			"http://boringpapercompany.com",
+			"https://boringpapercompany.com",
+			"https://*.boringpapercompany.com",
+			"http://*.boringpapercompany.com",
 		}
 		
 		// Check exact matches first

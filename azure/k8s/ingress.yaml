@@ -7,14 +7,10 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Optional: for SSL
+    nginx.ingress.kubernetes.io/websocket-services: "containerxdr-service"
 spec:
-  tls:
-  - hosts:
-    - boringpaper.example.com  # Replace with your domain
-    secretName: boring-paper-tls
   rules:
-  - host: boringpaper.example.com  # Replace with your domain
+  - host: azure.boringpapercompany.com  # Boring Azure domain
     http:
       paths:
       - path: /

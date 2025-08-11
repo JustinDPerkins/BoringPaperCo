@@ -18,7 +18,14 @@ for service in "${services[@]}"; do
     if [ -f "$deployment_file" ]; then
         echo "🔧 Updating $deployment_file..."
         # Replace hardcoded ACR with Terraform ACR
-        sed -i.bak "s|boringrepo\.azurecr\.io|$ACR_SERVER|g" "$deployment_file"
+        # Use sed compatible with both macOS and Linux
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            sed -i '' "s|boringrepo\.azurecr\.io|$ACR_SERVER|g" "$deployment_file"
+        else
+            # Linux
+            sed -i "s|boringrepo\.azurecr\.io|$ACR_SERVER|g" "$deployment_file"
+        fi
         echo "✅ Updated $service deployment"
     fi
 done
@@ -29,4 +36,7 @@ echo ""
 echo "📝 Image references now point to:"
 for service in "${services[@]}"; do
     echo "  ✅ $service: $ACR_SERVER/boringpaperco/$service:latest"
-done 
+done
+
+echo ""
+echo "🚀 Next step: Run 3_deploy.sh to deploy to AKS" 

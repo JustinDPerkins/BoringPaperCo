@@ -1,4 +1,4 @@
-# Boring Paper Co - Multi-Cloud Kubernetes Deployment
+# Boring Paper Co - AI-Powered Business Platform
 
 [![AWS EKS](https://img.shields.io/badge/AWS%20EKS-Deployed-success?style=for-the-badge&logo=amazon-aws&logoColor=white)](./aws/)
 [![Azure AKS](https://img.shields.io/badge/Azure%20AKS-Deployed-success?style=for-the-badge&logo=microsoft-azure&logoColor=white)](./azure/)
@@ -14,122 +14,77 @@
   <img src="ui/public/images/bpclogo.png" alt="Boring Paper Co Logo" width="300">
 </div>
 
-A production-ready, multi-cloud microservices application demonstrating **consistent deployment patterns** across AWS EKS, Azure AKS, and Google Cloud GKE. **Complete trilogy** - all three clouds implemented!
+**Boring Paper Co** is a modern, AI-powered business platform that combines document management, AI chat assistance, and security monitoring into a unified web application. Built with microservices architecture, it's designed to run seamlessly across multiple cloud providers.
 
-## 🏗️ Architecture
+## 🎯 What Does Boring Paper Co Do?
 
-The Boring Paper Co application consists of **5 microservices** deployed identically across multiple cloud providers:
+### 📄 **Document Management & Processing**
+- **File Upload & Storage**: Secure document upload with support for multiple file types
+- **AI-Powered Analysis**: Intelligent document processing using local AI models
+- **Search & Organization**: Advanced search capabilities across your document library
 
-| Service | Purpose | Port | Technology |
-|---------|---------|------|------------|
-| **UI** | React frontend | 80 | React, NGINX |
-| **SDK** | Core API backend | 5000 | Go, Echo framework |
-| **ContainerXDR** | Security monitoring | 8081 | Go, WebSocket support |
-| **AI Chat** | Chat interface | 5001 | Go, Ollama integration |
-| **Ollama** | LLM inference | 11434 | Ollama, phi:latest model |
+### 🤖 **AI Chat Assistant**
+- **Intelligent Conversations**: Chat with an AI assistant powered by Ollama's phi:latest model
+- **Context-Aware Responses**: AI that understands your business context and documents
+- **Local AI Processing**: Privacy-focused AI that runs entirely on your infrastructure
 
-### Multi-Cloud Infrastructure
 
-```
-┌─────────────┬─────────────┬─────────────┐
-│   AWS EKS   │  Azure AKS  │  GCP GKE   │
-├─────────────┼─────────────┼─────────────┤
-│ ✅ Running  │ ✅ Running  │ ✅ Running │
-│             │             │             │
-│ ECR Registry│ ACR Registry│ Artifact Reg│
-│ EBS Volumes │ Azure Files │ GCP Disks   │
-│ Classic ELB │ Azure LB    │ GCP LB      │
-│ VPC + Subnets│ VNet + Subnets│ VPC + Subnets│
-└─────────────┴─────────────┴─────────────┘
-              │
-              ▼
-    🌐 NGINX Ingress Controller
-       (Consistent across all clouds)
-```
+## 🏗️ Architecture Overview
 
-## 🚀 Quick Start
+Boring Paper Co is built using a **microservices architecture** with 5 core services:
 
-### AWS EKS Deployment
+| Service | Purpose | Technology |
+|---------|---------|------------|
+| **UI** | React frontend with NGINX proxy | React, Vite, NGINX |
+| **SDK** | Core business logic and API | Go, Echo framework |
+| **ContainerXDR** | Security monitoring & terminal | Go, WebSocket support |
+| **AI Chat** | AI conversation interface | Go, Ollama integration |
+| **Ollama** | Local AI model inference | Ollama, phi:latest model |
+
+### Key Technical Features
+
+- **Multi-Cloud Ready**: Deploy on AWS EKS, Azure AKS, or Google Cloud GKE
+- **Containerized**: Fully containerized with Docker for easy deployment
+- **Scalable**: Kubernetes-native design for horizontal scaling
+- **Secure**: Built-in security scanning and monitoring
+- **AI-First**: Local AI processing for privacy and performance
+
+## 🚀 Getting Started
+
+### Option 1: Local Development (Docker Compose)
 ```bash
-# 1. Infrastructure
-cd aws/iac
-terraform init && terraform apply
-
-# 2. Build & Deploy  
-cd ../k8s
-./build-and-push.sh
-kubectl apply -f .
+cd local
+docker-compose up -d
+# Access at http://localhost:3000
 ```
 
-### Azure AKS Deployment
-```bash
-# 1. Infrastructure (with new ACR automation)
-cd azure/iac
-terraform init && terraform apply
+### Option 2: Cloud Deployment
+Choose your preferred cloud provider:
 
-# 2. Build & Deploy
-cd ../k8s  
-./build-and-push.sh
-kubectl apply -f .
-```
+- **[AWS EKS](./aws/)** - Enterprise-grade Kubernetes on AWS
+- **[Azure AKS](./azure/)** - Managed Kubernetes on Microsoft Azure  
+- **[Google Cloud GKE](./gcp/)** - Google's managed Kubernetes service
 
-### GCP GKE Deployment  
-```bash
-# 1. Infrastructure (with Artifact Registry automation)
-cd gcp/iac
-terraform init && terraform apply
+Each cloud deployment includes:
+- **Infrastructure as Code** with Terraform
+- **Automated deployment scripts** for easy setup
+- **Production-ready configuration** with load balancing and monitoring
 
-# 2. Build & Deploy
-cd ../k8s  
-./build-and-push.sh
-./deploy.sh
-```
+---
 
-## 📁 Repository Structure
+### **Infrastructure**
+- **Kubernetes** - Container orchestration and management
+- **Docker** - Application containerization
+- **Terraform** - Infrastructure as Code automation
 
-```
-BoringPaperCo/
-├── 🌩️  aws/
-│   ├── iac/           # Terraform: EKS + ECR + VPC + EBS CSI
-│   └── k8s/           # Kubernetes manifests + scripts
-├── ☁️  azure/  
-│   ├── iac/           # Terraform: AKS + ACR + VNet
-│   └── k8s/           # Kubernetes manifests + scripts  
-├── 🔧 gcp/
-│   ├── iac/           # Terraform: GKE + Artifact Registry + VPC
-│   └── k8s/           # Kubernetes manifests + scripts
-├── 🔮 aichat/         # AI Chat service (Go + Ollama)
-├── 🔒 containerxdr/   # Security monitoring (Go + WebSocket)
-├── 🖥️  ui/            # React frontend
-├── ⚙️  sdk/           # Core API backend (Go)
-└── 🐳 local/          # Docker Compose for local dev
-```
 
-## ⭐ Key Features
+### **Multi-Cloud Deployment**
+- Identical functionality across AWS, Azure, and GCP
+- Cloud-native optimizations for each platform
+- Consistent user experience regardless of deployment location
+- Easy migration between cloud providers
 
-### 🎯 **Multi-Cloud Consistency**
-- **Same architecture** across AWS, Azure, and GCP
-- **NGINX Ingress** instead of cloud-specific load balancers  
-- **Terraform automation** for infrastructure
-- **Multi-cloud CORS** support in services
-
-### 🤖 **AI-Powered Features**  
-- **Ollama integration** with phi:latest model
-- **Chat interface** with natural language processing
-- **Containerized AI** - fully portable across clouds
-
-### 🏗️ **Cloud-Optimized Deployments**
-- **AWS**: Regional EKS with EBS CSI driver
-- **Azure**: Regional AKS with Azure Files
-- **GCP**: Zonal GKE with optimized e2-standard-4 nodes for cost efficiency
-
-## 🏆 Migration Success Story
-
-This project can demonstrate a **simple migration** from CSP to CSP, learning key lessons:
-
-**Securing Cluster Migrations**: Simple, consistent security implementations.
-
-### Multi-Cloud Context Switching
+### **Multi-Cloud Context Switching**
 ```bash
 # Ensure Kube Context is correct for the cluster you may be interacting with
 kubectl config current-context
@@ -141,46 +96,3 @@ kubectl config get-contexts
 kubectl config use-context <Name to switch to>
 ```
 
-## 🛠️ Technology Stack
-
-**Infrastructure as Code**
-- **Terraform** - Multi-cloud infrastructure automation
-- **Kubernetes** - Container orchestration (v1.32+)
-- **Docker** - Application containerization
-
-**Backend Services**  
-- **Go** - High-performance microservices
-- **Echo Framework** - HTTP routing and middleware
-- **Ollama** - Local LLM inference (phi:latest)
-
-**Frontend**
-- **React** - Modern web interface
-- **Vite** - Fast build tooling
-- **NGINX** - Static file serving and proxy
-
-**Cloud Integration**
-- **AWS**: EKS, ECR, EBS CSI, VPC, Classic ELB
-- **Azure**: AKS, ACR, Azure Files, VNet, Azure LB  
-- **GCP**: GKE, Artifact Registry, GCP Disks, VPC, GCP LB
-
-## 📋 Prerequisites
-
-- **Cloud CLI**: `aws`, `az`, or `gcloud` configured
-- **Container Tools**: Docker Desktop or equivalent
-- **Kubernetes**: `kubectl` installed
-- **Infrastructure**: Terraform >= 1.0
-- **Development**: Go 1.19+, Node.js 18+ (for local development)
-
-## 🚀 Getting Started
-
-1. **Choose your cloud** (AWS, Azure, or GCP - all fully supported)
-2. **Navigate to cloud directory** (`./aws/`, `./azure/`, or `./gcp/`)  
-3. **Follow the README** in that directory for specific instructions
-4. **Deploy infrastructure** with Terraform
-5. **Build and deploy services** with provided scripts
-
-Each cloud has identical functionality but uses cloud-native services where appropriate.
-
----
-
-**Built with ❤️ for multi-cloud excellence** | Terraform + Kubernetes + Go + React

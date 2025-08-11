@@ -54,4 +54,4 @@ done
 
 echo ""
 echo "💡 To update deployment files automatically, run:"
-echo "   ./update-image-refs.sh" 
+echo "   ./2_update-image-refs.sh" 

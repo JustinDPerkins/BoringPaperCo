@@ -16,4 +16,4 @@ data:
   VITE_AICHAT_URL: "/api/chat"
   VITE_XDR_WS_URL: "/api/xdr/terminal"
   # Multi-cloud CORS support - GCP patterns
-  ALLOWED_ORIGINS: "*.run.app,boringpaper.example.com" 
+  ALLOWED_ORIGINS: "http://boringpapercompany.com,http://azure.boringpapercompany.com,http://gcp.boringpapercompany.com, https://boringpapercompany.com,https://azure.boringpapercompany.com,https://gcp.boringpapercompany.com" 

@@ -15,7 +15,7 @@ metadata:
       proxy_set_header Connection "upgrade";
 spec:
   rules:
-  - host: boringpaper.yourdomain.com  # Replace with your domain
+  - host: boringpapercompany.com  # Replace with your domain
     http:
       paths:
       - path: /

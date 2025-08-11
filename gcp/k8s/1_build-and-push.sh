@@ -58,6 +58,6 @@ done
 echo ""
 echo "🚀 Next steps:"
 echo "1. Update deployment YAML files with these image URLs (if needed)"
-echo "2. Run './deploy.sh' to deploy to GKE"
+echo "2. Run './2_update_refs.sh' to update artifact locations"
 echo ""
 echo "💡 Note: GKE has automatic pull access via Workload Identity and IAM bindings" 

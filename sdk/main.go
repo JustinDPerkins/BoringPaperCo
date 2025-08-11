@@ -38,6 +38,13 @@ func setCORSHeaders(w http.ResponseWriter, r *http.Request) {
 		// Development
 		"http://localhost",
 		"https://localhost",
+
+		"http://boringpapercompany.com",
+		"https://boringpapercompany.com",
+		"http://gcp.boringpapercompany.com",
+		"https://gcp.boringpapercompany.com",
+		"http://azure.boringpapercompany.com",
+		"https://azure.boringpapercompany.com",
 	}
 	
 	// Add specific load balancer IP for GCP

@@ -22,7 +22,14 @@ for service in "${services[@]}"; do
         
         # Replace placeholder project-id and registry URL with actual Terraform values
         # Pattern: us-central1-docker.pkg.dev/project-id/boringpaperco-SERVICE/boringpaperco/SERVICE:latest
-        sed -i.bak "s|us-central1-docker\.pkg\.dev/project-id|$REGISTRY_BASE_URL|g" "$deployment_file"
+        # Use sed compatible with both macOS and Linux
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            sed -i '' "s|us-central1-docker\.pkg\.dev/project-id|$REGISTRY_BASE_URL|g" "$deployment_file"
+        else
+            # Linux
+            sed -i "s|us-central1-docker\.pkg\.dev/project-id|$REGISTRY_BASE_URL|g" "$deployment_file"
+        fi
         
         echo "✅ Updated $service deployment"
     fi
@@ -34,4 +41,7 @@ echo ""
 echo "📝 Image references now point to:"
 for service in "${services[@]}"; do
     echo "  ✅ $service: $REGISTRY_BASE_URL/boringpaperco-$service/boringpaperco/$service:latest"
-done 
+done
+
+echo ""
+echo "🚀 Next step: Run 3_deploy.sh to deploy to GKE" 

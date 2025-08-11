@@ -18,8 +18,14 @@ services=("ui" "sdk" "containerxdr" "aichat")
 for service in "${services[@]}"; do
     if [ -f "${service}-deployment.yaml" ]; then
         echo "📝 Updating ${service}-deployment.yaml..."
-        sed -i.bak "s/ACCOUNT_ID\.dkr\.ecr\.REGION\.amazonaws\.com/${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/g" "${service}-deployment.yaml"
-        rm "${service}-deployment.yaml.bak"
+        # Use sed compatible with both macOS and Linux
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            sed -i '' "s/ACCOUNT_ID\.dkr\.ecr\.REGION\.amazonaws\.com/${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/g" "${service}-deployment.yaml"
+        else
+            # Linux
+            sed -i "s/ACCOUNT_ID\.dkr\.ecr\.REGION\.amazonaws\.com/${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/g" "${service}-deployment.yaml"
+        fi
         echo "✅ ${service}-deployment.yaml updated!"
     else
         echo "⚠️  ${service}-deployment.yaml not found, skipping..."
@@ -29,8 +35,14 @@ done
 # Update ingress file
 if [ -f "ingress.yaml" ]; then
     echo "📝 Updating ingress.yaml..."
-    sed -i.bak "s/REGION/${REGION}/g; s/ACCOUNT_ID/${ACCOUNT_ID}/g" ingress.yaml
-    rm ingress.yaml.bak
+    # Use sed compatible with both macOS and Linux
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        sed -i '' "s/REGION/${REGION}/g; s/ACCOUNT_ID/${ACCOUNT_ID}/g" ingress.yaml
+    else
+        # Linux
+        sed -i "s/REGION/${REGION}/g; s/ACCOUNT_ID/${ACCOUNT_ID}/g" ingress.yaml
+    fi
     echo "✅ ingress.yaml updated!"
 fi
 
@@ -46,5 +58,4 @@ done
 echo "  ✓ ingress.yaml"
 
 echo ""
-echo "📝 Next step: Deploy to EKS using:"
-echo "   ./deploy.sh" 
+echo "🚀 Next step: Run 3_deploy.sh to deploy to EKS" 
