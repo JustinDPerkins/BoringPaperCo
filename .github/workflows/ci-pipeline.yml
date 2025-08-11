@@ -22,13 +22,9 @@ jobs:
         run: docker build -t ${{ env.UI_CONTAINER_NAME }}:${{ env.RELEASE }} ui/
       - name: Install TMAS CLI
         run: |
-          curl -f -s -o tmas-cli.tar.gz "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas-cli_Linux_x86_64.tar.gz"
-          tar -tzf tmas-cli.tar.gz
-          tar -xzf tmas-cli.tar.gz
-          ls -la
-          find . -name "*tmas*" -type f
-          chmod +x ./tmas-cli
-          sudo mv ./tmas-cli /usr/local/bin/tmas
+          curl -f -s -o tmas_install.sh "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas_install.sh"
+          chmod +x tmas_install.sh
+          ./tmas_install.sh
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
@@ -44,13 +40,9 @@ jobs:
         run: docker build -t ${{ env.SDK_CONTAINER_NAME }}:${{ env.RELEASE }} sdk/
       - name: Install TMAS CLI
         run: |
-          curl -f -s -o tmas-cli.tar.gz "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas-cli_Linux_x86_64.tar.gz"
-          tar -tzf tmas-cli.tar.gz
-          tar -xzf tmas-cli.tar.gz
-          ls -la
-          find . -name "*tmas*" -type f
-          chmod +x ./tmas-cli
-          sudo mv ./tmas-cli /usr/local/bin/tmas
+          curl -f -s -o tmas_install.sh "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas_install.sh"
+          chmod +x tmas_install.sh
+          ./tmas_install.sh
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
@@ -66,13 +58,9 @@ jobs:
         run: docker build -t ${{ env.CONTAINERXDR_CONTAINER_NAME }}:${{ env.RELEASE }} containerxdr/
       - name: Install TMAS CLI
         run: |
-          curl -f -s -o tmas-cli.tar.gz "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas-cli_Linux_x86_64.tar.gz"
-          tar -tzf tmas-cli.tar.gz
-          tar -xzf tmas-cli.tar.gz
-          ls -la
-          find . -name "*tmas*" -type f
-          chmod +x ./tmas-cli
-          sudo mv ./tmas-cli /usr/local/bin/tmas
+          curl -f -s -o tmas_install.sh "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas_install.sh"
+          chmod +x tmas_install.sh
+          ./tmas_install.sh
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
@@ -88,13 +76,9 @@ jobs:
         run: docker build -t ${{ env.AICHAT_CONTAINER_NAME }}:${{ env.RELEASE }} aichat/
       - name: Install TMAS CLI
         run: |
-          curl -f -s -o tmas-cli.tar.gz "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas-cli_Linux_x86_64.tar.gz"
-          tar -tzf tmas-cli.tar.gz
-          tar -xzf tmas-cli.tar.gz
-          ls -la
-          find . -name "*tmas*" -type f
-          chmod +x ./tmas-cli
-          sudo mv ./tmas-cli /usr/local/bin/tmas
+          curl -f -s -o tmas_install.sh "https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas_install.sh"
+          chmod +x tmas_install.sh
+          ./tmas_install.sh
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
