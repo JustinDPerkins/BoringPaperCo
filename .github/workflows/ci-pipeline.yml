@@ -28,8 +28,8 @@ jobs:
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
-          docker save "${UI_CONTAINER_NAME}:${RELEASE}" > image.tar
-          tmas scan "docker-archive:image.tar" -VMS
+          docker save "${UI_CONTAINER_NAME}:${RELEASE}" > ui.tar
+          tmas scan "docker-archive:ui.tar" -VMS
 
   SDK:
     runs-on: ubuntu-latest
@@ -46,8 +46,8 @@ jobs:
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
-          docker save "${SDK_CONTAINER_NAME}:${RELEASE}" > image.tar
-          tmas scan "docker-archive:image.tar" -VMS
+          docker save "${SDK_CONTAINER_NAME}:${RELEASE}" > sdk.tar
+          tmas scan "docker-archive:sdk.tar" -VMS
 
   ContainerXDR:
     runs-on: ubuntu-latest
@@ -64,8 +64,8 @@ jobs:
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
-          docker save "${CONTAINERXDR_CONTAINER_NAME}:${RELEASE}" > image.tar
-          tmas scan "docker-archive:image.tar" -VMS
+          docker save "${CONTAINERXDR_CONTAINER_NAME}:${RELEASE}" > containerxdr.tar
+          tmas scan "docker-archive:containerxdr.tar" -VMS
 
   AIChat:
     runs-on: ubuntu-latest
@@ -82,5 +82,5 @@ jobs:
       - name: Scan with TMAS
         run: |
           export TMAS_API_KEY='${{ secrets.V1_API_KEY }}'
-          docker save "${AICHAT_CONTAINER_NAME}:${RELEASE}" > image.tar
-          tmas scan "docker-archive:image.tar" -VMS
+          docker save "${AICHAT_CONTAINER_NAME}:${RELEASE}" > aichat.tar
+          tmas scan "docker-archive:aichat.tar" -VMS
