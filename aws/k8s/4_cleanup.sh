@@ -7,8 +7,13 @@ set -e
 
 echo "🧹 Cleaning up Boring Paper Co deployment..."
 
-# Set your region here or export AWS_REGION before running
-AWS_REGION="${AWS_REGION:-us-west-2}"
+# Prompt for AWS region
+echo "🌍 Please enter your AWS region:"
+read AWS_REGION
+if [[ -z "$AWS_REGION" ]]; then
+    echo "❌ Region is required. Exiting."
+    exit 1
+fi
 
 # Get cluster name from kubectl context
 if kubectl cluster-info > /dev/null 2>&1; then

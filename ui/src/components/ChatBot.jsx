@@ -6,7 +6,10 @@ import {
   Paper, 
   TextField,
   Slide,
-  useTheme
+  useTheme,
+  Switch,
+  FormControlLabel,
+  Divider
 } from '@mui/material';
 import { 
   Chat as ChatIcon, 
@@ -22,6 +25,7 @@ export default function ChatBot() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [securityEnabled, setSecurityEnabled] = useState(true);
   const messagesEndRef = useRef(null);
 
   // Add a message to the chat
@@ -45,7 +49,10 @@ export default function ChatBot() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: inputValue }),
+        body: JSON.stringify({ 
+          message: inputValue,
+          securityEnabled: securityEnabled 
+        }),
       });
 
       const data = await response.json();
@@ -143,6 +150,32 @@ export default function ChatBot() {
             >
               <CloseIcon fontSize="small" />
             </IconButton>
+          </Box>
+
+          {/* Security Toggle */}
+          <Box sx={{ p: theme.spacing(0.5), borderBottom: `1px solid rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0,0,0'},0.1)` }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={securityEnabled}
+                  onChange={(e) => setSecurityEnabled(e.target.checked)}
+                  size="small"
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: '#4caf50',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: '#4caf50',
+                    },
+                  }}
+                />
+              }
+              label={
+                <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+                  AI Guard Protection
+                </Typography>
+              }
+            />
           </Box>
 
           {/* Messages Container */}

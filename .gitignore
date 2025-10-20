@@ -41,3 +41,6 @@ tfplan
 **/*.yaml.bak
 *.bak
 **/*.bak
+**/*.asc
+**/*.tgz
+**/*.tgz.prov

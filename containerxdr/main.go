@@ -38,9 +38,11 @@ var upgrader = websocket.Upgrader{
 			// GCP patterns  
 			"http://*.run.app",
 			"https://*.run.app",
-			// Development
+					// Development - allow localhost with any port
 			"http://localhost",
 			"https://localhost",
+			"http://localhost:*",
+			"https://localhost:*",
 
 			"http://boringpapercompany.com",
 			"https://boringpapercompany.com",
@@ -55,9 +57,17 @@ var upgrader = websocket.Upgrader{
 			}
 		}
 		
-		// Check wildcard patterns (for cloud load balancers)
+		// Check wildcard patterns (for cloud load balancers and localhost)
 		for _, allowed := range allowedOrigins {
 			if strings.Contains(allowed, "*") {
+				// Handle localhost:* pattern
+				if strings.Contains(allowed, "localhost:*") {
+					if strings.HasPrefix(origin, "http://localhost:") || strings.HasPrefix(origin, "https://localhost:") {
+						return true
+					}
+					continue
+				}
+				
 				// Extract the domain part after the wildcard
 				// "http://*.cloudapp.azure.com" → ".cloudapp.azure.com"
 				parts := strings.Split(allowed, "*")
@@ -79,10 +89,15 @@ var upgrader = websocket.Upgrader{
 			}
 		}
 		
-		// Allow development IPs
+		// Allow development IPs and localhost with common ports
 		if strings.Contains(origin, "127.0.0.1") ||
 		   strings.Contains(origin, "192.168.") ||
 		   strings.Contains(origin, "10.0.") {
+			return true
+		}
+		
+		// Allow localhost with any port for development
+		if strings.HasPrefix(origin, "http://localhost:") || strings.HasPrefix(origin, "https://localhost:") {
 			return true
 		}
 		

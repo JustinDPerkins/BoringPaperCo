@@ -10,10 +10,10 @@ services:
       context: ../sdk
     ports:
       - "5000:5000"
-    env_file:                # pull API_KEY and REGION from .env for convenience
+    env_file:                
       - .env
     environment:
-      API_KEY: ${API_KEY}    # fallback if you want to override inline
+      API_KEY: ${API_KEY}    
       REGION:  ${REGION}
     restart: unless-stopped
     networks:

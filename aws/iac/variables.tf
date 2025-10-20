@@ -13,13 +13,13 @@ variable "kubernetes_version" {
 variable "node_count" {
   type        = number
   description = "The initial quantity of nodes for the node pool."
-  default     = 2
+  default     = 3
 }
 
 variable "node_instance_type" {
   type        = string
   description = "EC2 instance type for EKS worker nodes"
-  default     = "t3.large"
+  default     = "t3.xlarge"
 }
 
 variable "ecr_repositories" {

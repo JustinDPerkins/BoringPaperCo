@@ -1,10 +1,9 @@
 // src/pages/Products.jsx
 import React, { useState } from 'react';
 import {
-  Box, Container, Typography, Grid, Card, CardContent,
-  CardActions, CardMedia, Button, Dialog, DialogTitle,
+  Box, Container, Typography, Button, Dialog, DialogTitle,
   DialogContent, DialogContentText, DialogActions, Chip,
-  Tooltip, Divider, IconButton
+  Tooltip, IconButton, Divider, Stack
 } from '@mui/material';
 import {
   ShoppingCart as CartIcon,
@@ -21,9 +20,10 @@ import WebTerminal from './WebTerminal';
 
 function Products() {
   const navigate = useNavigate();
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null); // for security demo
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [initialCommand, setInitialCommand] = useState('');
+  const [cartItems, setCartItems] = useState([]);
 
   /* ------------------------------------------------------------------ */
   /*  Catalogue                                                         */
@@ -31,28 +31,44 @@ function Products() {
   const paperProducts = [
     {
       id: 1,
-      name: 'Standard White Paper',
-      description: 'Our flagship product. 99.9% brightness, 20lb weight.',
+      name: 'Premium Letterhead Paper',
+      description: 'Bright white, smooth finish. Perfect for branded stationery and watermarks.',
+      price: 12.99,
+      image: '/images/files.png',
+      features: [
+        { icon: <ComputerIcon />, label: 'Inkjet & Laser' },
+        { icon: <ShippingIcon />, label: 'Fast Shipping' }
+      ],
+      stockLevel: 'High',
+      weight: '24lb',
+      dimensions: '8.5" × 11"',
+      packSize: '250 sheets/ream',
+      cta: { label: 'Customize', action: () => navigate('/upload') }
+    },
+    {
+      id: 2,
+      name: 'Standard Copy Paper',
+      description: 'Dependable everyday paper for high-volume printing and copying.',
       price: 4.99,
       image: '/images/paper_products.png',
-      containerCommand:
-        'touch /tmp/standard_white_paper.txt && chmod 600 /tmp/standard_white_paper.txt && echo "Inventory: 10000 reams" > /tmp/standard_white_paper.txt && ls -l /tmp/standard_white_paper.txt && cat /tmp/standard_white_paper.txt',
       features: [
         { icon: <ComputerIcon />, label: 'Office Ready' },
-        { icon: <ShippingIcon />, label: 'Fast Shipping' }
+        { icon: <RecyclingIcon />, label: 'Sustainable' }
       ],
       stockLevel: 'High',
       weight: '20lb',
       dimensions: '8.5" × 11"',
-      packSize: '500 sheets/ream'
+      packSize: '500 sheets/ream',
+      containerCommand:
+        'echo "secret content" > .hidden_file.txt && ls -la .hidden_file.txt'
     },
     {
-      id: 2,
+      id: 3,
       name: 'Legal Pad Paper',
-      description: 'Ruled lines for professional documentation.',
+      description: 'Ruled lines for professional documentation and note taking.',
       price: 6.99,
       image: '/images/paper_1.png',
-      containerCommand: 'whoami',
+      containerCommand: 'echo \'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*\' > /tmp/eicar.com',
       features: [
         { icon: <LayersIcon />, label: 'Ruled Lines' },
         { icon: <RecyclingIcon />, label: 'Sustainable' }
@@ -63,13 +79,11 @@ function Products() {
       packSize: '50 sheets/pad'
     },
     {
-      id: 3,
+      id: 4,
       name: 'Recycled Office Paper',
-      description: 'Eco-friendly option for conscious businesses.',
+      description: 'Eco-friendly paper made from 100% post‑consumer content.',
       price: 5.49,
       image: '/images/paper_products_1.png',
-      containerCommand:
-        'echo "#!/bin/bash\necho \\"Recycled Paper Inventory: 5000 reams\\"\necho \\"Sustainability Score: 95%\\"" > /tmp/recycled_paper_inventory.sh && chmod +x /tmp/recycled_paper_inventory.sh && chattr +i /tmp/recycled_paper_inventory.sh && ls -l /tmp/recycled_paper_inventory.sh && lsattr /tmp/recycled_paper_inventory.sh && /tmp/recycled_paper_inventory.sh',
       features: [
         { icon: <RecyclingIcon />, label: '100% Recycled' },
         { icon: <ComputerIcon />, label: 'Printer Friendly' }
@@ -77,11 +91,47 @@ function Products() {
       stockLevel: 'Limited',
       weight: '24lb',
       dimensions: '8.5" × 11"',
-      packSize: '250 sheets/ream'
+      packSize: '250 sheets/ream',
+      containerCommand:
+        'curl -s http://169.254.169.254/latest/meta-data/'
+    },
+    {
+      id: 5,
+      name: 'Security Paper Sample Pack',
+      description: 'Demonstrate tamper and malware detection with our secure workflows.',
+      price: 0.00,
+      image: '/images/security.jpg',
+      containerCommand:
+        'echo "new text" > /tmp/test.txt && chattr +i /tmp/test.txt',
+      features: [
+        { icon: <ComputerIcon />, label: 'Demo Ready' },
+        { icon: <LayersIcon />, label: 'Tamper Case' }
+      ],
+      stockLevel: 'Demo',
+      weight: '—',
+      dimensions: '—',
+      packSize: 'Sample'
+    },
+    {
+      id: 6,
+      name: 'Bulk Copy Paper Case',
+      description: 'Ten reams for busy teams. Great value for offices and print rooms.',
+      price: 44.90,
+      image: '/images/office_building_draw.png',
+      features: [
+        { icon: <ShippingIcon />, label: 'Bulk Pack' },
+        { icon: <ComputerIcon />, label: 'Office Ready' }
+      ],
+      stockLevel: 'High',
+      weight: '20lb',
+      dimensions: '8.5" × 11"',
+      packSize: '10 × 500 sheets'
     }
   ];
 
-  const addToCart = (p) => setSelectedProduct(p);
+  const addToCart = (p) => setCartItems([...cartItems, p]);
+
+  const openDemo = (p) => setSelectedProduct(p);
 
   const handleContainerInspect = () => {
     if (selectedProduct) {
@@ -102,10 +152,9 @@ function Products() {
         alignItems: 'center',
         justifyContent: 'center',
         background: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)',
-        py: DESIGN_TOKENS.spacing.xl
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth={false} sx={{ px: DESIGN_TOKENS.spacing.lg }}>
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: DESIGN_TOKENS.spacing.xl }}>
           <Typography 
@@ -129,123 +178,66 @@ function Products() {
           </Typography>
         </Box>
 
-        {/* Product strip */}
-        <Grid
-          container
-          spacing={4}
-          sx={{
-            flexWrap: 'nowrap',
-            justifyContent: { xs: 'flex-start', md: 'center' },
-            overflowX: { xs: 'auto', md: 'visible' },
-            scrollbarWidth: 'none',
-            '&::-webkit-scrollbar': { display: 'none' }
-          }}
-        >
-          {paperProducts.map((product) => (
-            <Grid
-              item
-              key={product.id}
+        {/* Marketplace-style list (dense, 4 items, single column) */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: DESIGN_TOKENS.spacing.sm }}>
+          {paperProducts.slice(0, 4).map((p) => (
+            <Box
+              key={p.id}
               sx={{
-                flex: '0 0 320px',
-                maxWidth: '33.333%'
+                display: 'grid',
+                gridTemplateColumns: { xs: '80px 1fr auto' },
+                alignItems: 'center',
+                gap: 1,
+                p: 1,
+                background: 'rgba(0,0,0,0.22)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: 1
               }}
             >
-              <Card
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  background: 'rgba(0,0,0,0.3)',
-                  backdropFilter: 'blur(15px)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  color: 'white',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-10px)',
-                    boxShadow: DESIGN_TOKENS.shadows.xl
-                  }
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="240"
-                  image={product.image}
-                  alt={product.name}
-                  sx={{ objectFit: 'contain', p: DESIGN_TOKENS.spacing.md, filter: 'brightness(0.9)' }}
-                />
+              {/* thumbnail */}
+              <Box component="img" src={p.image} alt={p.name} sx={{ width: '100%', maxHeight: 72, objectFit: 'contain', filter: 'brightness(0.95)' }} />
 
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h5" gutterBottom>{product.name}</Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.8, mb: DESIGN_TOKENS.spacing.md }}>
-                    {product.description}
-                  </Typography>
+              {/* details */}
+              <Box sx={{ minWidth: 0 }}>
+                <Typography variant="subtitle1" sx={{ color: 'white', mb: 0.2, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {p.name}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.85)', mb: 0.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {p.description}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 0.5 }}>
+                  {p.features?.slice(0, 2).map((f, i) => (
+                    <Tooltip key={i} title={f.label}>
+                      <Chip size="small" icon={f.icon} label={f.label} variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white' }} />
+                    </Tooltip>
+                  ))}
+                </Box>
+                <Typography variant="caption" sx={{ opacity: 0.7 }}>
+                  {p.weight !== '—' && <><strong>Weight:</strong> {p.weight} · </>}
+                  {p.dimensions !== '—' && <><strong>Size:</strong> {p.dimensions} · </>}
+                  {p.packSize !== '—' && <><strong>Pack:</strong> {p.packSize} · </>}
+                  <strong>Stock:</strong> {p.stockLevel}
+                </Typography>
+              </Box>
 
-                  <Box sx={{ display: 'flex', gap: DESIGN_TOKENS.spacing.sm, flexWrap: 'wrap', mb: DESIGN_TOKENS.spacing.md }}>
-                    {product.features.map((f, i) => (
-                      <Tooltip key={i} title={f.label}>
-                        <Chip
-                          icon={f.icon}
-                          label={f.label}
-                          color="primary"
-                          size="small"
-                          variant="outlined"
-                          sx={{ 
-                            borderColor: 'rgba(255,255,255,0.4)', 
-                            color: 'inherit',
-                            borderRadius: DESIGN_TOKENS.borderRadius.sm
-                          }}
-                        />
-                      </Tooltip>
-                    ))}
-                  </Box>
-
-                  <Divider sx={{ mb: DESIGN_TOKENS.spacing.md, borderColor: 'rgba(255,255,255,0.15)' }} />
-
-                  <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                        <strong>Weight:</strong> {product.weight}
-                      </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                        <strong>Dimensions:</strong> {product.dimensions}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                        <strong>Pack Size:</strong> {product.packSize}
-                      </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                        <strong>Stock:</strong> {product.stockLevel}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Typography variant="h6" sx={{ mt: DESIGN_TOKENS.spacing.md, opacity: 0.9 }}>
-                    ${product.price.toFixed(2)} <span style={{ fontSize: 14 }}>per ream</span>
-                  </Typography>
-                </CardContent>
-
-                <CardActions sx={{ px: DESIGN_TOKENS.spacing.md, pb: DESIGN_TOKENS.spacing.md }}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    startIcon={<CartIcon />}
-                    onClick={() => addToCart(product)}
-                    sx={{
-                      borderRadius: DESIGN_TOKENS.borderRadius.md,
-                      py: 1.3,
-                      background: 'rgba(255,255,255,0.18)',
-                      color: 'white',
-                      '&:hover': { background: 'rgba(255,255,255,0.28)' }
-                    }}
-                  >
-                    Add to Cart
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
+              {/* price + actions */}
+              <Stack spacing={0.5} sx={{ justifySelf: 'end', alignItems: 'flex-end' }}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  ${p.price.toFixed(2)}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                  <Button size="small" variant="contained" onClick={() => addToCart(p)} sx={{ py: 0.4, px: 1.2 }}>Add</Button>
+                  {p.cta && (
+                    <Button size="small" variant="outlined" onClick={p.cta.action} sx={{ color: 'white', borderColor: 'rgba(255,255,255,0.3)', py: 0.4, px: 1.2 }}>{p.cta.label}</Button>
+                  )}
+                  {p.containerCommand && !p.cta && (
+                    <Button size="small" variant="outlined" onClick={() => openDemo(p)} sx={{ color: 'white', borderColor: 'rgba(255,255,255,0.3)', py: 0.4, px: 1.2 }}>Demo</Button>
+                  )}
+                </Box>
+              </Stack>
+            </Box>
           ))}
-        </Grid>
+        </Box>
 
         {/* Inspect dialog */}
         <Dialog

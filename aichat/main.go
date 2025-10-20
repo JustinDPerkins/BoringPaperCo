@@ -15,7 +15,8 @@ import (
 )
 
 type ChatRequest struct {
-	Message string `json:"message"`
+	Message         string `json:"message"`
+	SecurityEnabled *bool  `json:"securityEnabled,omitempty"`
 }
 
 type AIGuardConfig struct {
@@ -130,11 +131,19 @@ func handleChat(c echo.Context, guardCfg *AIGuardConfig) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"response": "Invalid request"})
 	}
 
-	// 1) Guard the **prompt** only
-	if blocked, err := checkAIGuard("prompt", req.Message, guardCfg); err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"response": "Error checking policy"})
-	} else if blocked {
-		return c.JSON(http.StatusForbidden, map[string]string{"response": "Blocked: Trend Vision One"})
+	// Check if security is enabled (default to true if not specified)
+	securityEnabled := true
+	if req.SecurityEnabled != nil {
+		securityEnabled = *req.SecurityEnabled
+	}
+
+	// 1) Guard the **prompt** only (if security is enabled)
+	if securityEnabled {
+		if blocked, err := checkAIGuard("prompt", req.Message, guardCfg); err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"response": "Error checking policy"})
+		} else if blocked {
+			return c.JSON(http.StatusForbidden, map[string]string{"response": "Blocked: Trend Vision One"})
+		}
 	}
 
 	// 2) Call Ollama with streaming enabled
@@ -174,8 +183,18 @@ func handleChat(c echo.Context, guardCfg *AIGuardConfig) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"response": "Error reading LLM response"})
 	}
 
-	// 4) Return the allowed reply
-	return c.JSON(http.StatusOK, map[string]string{"response": replyBuilder.String()})
+	// 4) Guard the **response** as well (if security is enabled)
+	response := replyBuilder.String()
+	if securityEnabled {
+		if blocked, err := checkAIGuard("response", response, guardCfg); err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"response": "Error checking policy"})
+		} else if blocked {
+			return c.JSON(http.StatusForbidden, map[string]string{"response": "Blocked: Trend Vision One"})
+		}
+	}
+
+	// 5) Return the allowed reply
+	return c.JSON(http.StatusOK, map[string]string{"response": response})
 }
 
 func main() {
