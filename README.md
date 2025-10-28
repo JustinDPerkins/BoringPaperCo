@@ -24,7 +24,7 @@
 - **Search & Organization**: Advanced search capabilities across your document library
 
 ### 🤖 **AI Chat Assistant**
-- **Intelligent Conversations**: Chat with an AI assistant powered by Ollama's phi:latest model
+- **Intelligent Conversations**: Chat with an AI assistant powered by Ollama's tinyllama:1.1b-chat model
 - **Context-Aware Responses**: AI that understands your business context and documents
 - **Local AI Processing**: Privacy-focused AI that runs entirely on your infrastructure
 
@@ -39,7 +39,7 @@ Boring Paper Co is built using a **microservices architecture** with 5 core serv
 | **SDK** | Core business logic and API | Go, Echo framework |
 | **ContainerXDR** | Security monitoring & terminal | Go, WebSocket support |
 | **AI Chat** | AI conversation interface | Go, Ollama integration |
-| **Ollama** | Local AI model inference | Ollama, phi:latest model |
+| **Ollama** | Local AI model inference | Ollama, tinyllama:1.1b-chat model |
 
 ### Key Technical Features
 

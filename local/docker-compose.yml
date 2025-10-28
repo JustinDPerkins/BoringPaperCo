@@ -9,7 +9,7 @@ services:
     build:
       context: ../sdk
     ports:
-      - "5000:5000"
+      - "5050:5000"  # Changed to 5050 to avoid macOS AirPlay conflict on 5000
     env_file:                
       - .env
     environment:
@@ -38,17 +38,16 @@ services:
     networks:
       - bpc-net
 
-  # ───────────── UI ───────────────
+  # ───────────── UI (TypeScript Edition) ───────────────
   ui:
     build:
-      context: ../ui           # uses the Dockerfile we just created
+      context: ../ui           # uses the new TypeScript UI with Vite
     ports:
       - "8080:80"             # host:container  → browse http://localhost:8080
     depends_on:
       - sdk-service           # ensure backend is up first
     environment:
       # Runtime base URL for your frontend to call the SDK API **inside** the Docker network
-      # (adapt the variable name to whatever your build expects, e.g. VITE_*/REACT_APP_*)
       VITE_API_BASE_URL: http://sdk-service:5000
       VITE_OLLAMA_URL: http://ollama-service:11434
       VITE_AICHAT_URL: http://aichat-service:5001

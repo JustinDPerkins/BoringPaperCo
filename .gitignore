@@ -21,6 +21,9 @@ build/
 azure/overrides.yaml
 aws/overrides.yaml
 gcp/overrides.yaml
+azure/k8s/secret.yaml
+aws/k8s/secret.yaml
+gcp/k8s/secret.yaml
 
 # ignore teffaform inits
 .terraform/
@@ -44,3 +47,4 @@ tfplan
 **/*.asc
 **/*.tgz
 **/*.tgz.prov
+

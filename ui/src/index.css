@@ -1,98 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: "Crimson Text", "Vollkorn", "Bitter", "Rokkitt", Georgia, serif;
+  font-family: "Crimson Text", "Vollkorn", "Bitter", Georgia, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   min-height: 100vh;
   color: #f5f1e8;
 }
 
+#root {
+  min-height: 100vh;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Global Dark Theme Overrides */
-.MuiPaper-root {
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  color: #e6e6e6 !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.MuiCard-root {
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  color: #e6e6e6 !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.MuiCardContent-root {
-  color: #e6e6e6 !important;
-}
-
-.MuiTypography-root {
-  color: #e6e6e6 !important;
-}
-
-.MuiButton-root {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #e6e6e6 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.MuiButton-contained {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-.MuiChip-root {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #e6e6e6 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.MuiDivider-root {
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Remove scrollbar styling */
+/* Hide scrollbars but keep functionality */
 ::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+  height: 8px;
 }
 
-/* For Firefox */
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;  /* IE and Edge */
-}
-
-.page-section {
+::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.glass-morphism {
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(15px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 241, 232, 0.3);
+  border-radius: 4px;
 }
 
-/* Add more specific color classes for different text types */
-.text-primary {
-  color: #f5f1e8;
-}
-
-.text-secondary {
-  color: #d4c7b8;
-}
-
-.text-muted {
-  color: #8c8c8c;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 241, 232, 0.5);
 }
