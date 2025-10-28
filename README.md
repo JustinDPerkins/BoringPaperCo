@@ -1,4 +1,4 @@
-# Boring Media Co - AI-Powered Media Streaming Platform
+# Boring Paper Co - AI-Powered Business Platform
 
 [![AWS EKS](https://img.shields.io/badge/AWS%20EKS-Deployed-success?style=for-the-badge&logo=amazon-aws&logoColor=white)](./aws/)
 [![Azure AKS](https://img.shields.io/badge/Azure%20AKS-Deployed-success?style=for-the-badge&logo=microsoft-azure&logoColor=white)](./azure/)
@@ -11,32 +11,32 @@
 [![NGINX](https://img.shields.io/badge/NGINX-Load%20Balancer-green?style=flat-square&logo=nginx)](./aws/k8s/ingress-nginx.yaml)
 
 <div align="center">
-  <img src="ui/public/images/bpclogo.png" alt="Boring Media Co Logo" width="300">
+  <img src="ui/public/images/bpclogo.png" alt="Boring Paper Co Logo" width="300">
 </div>
 
-**Boring Media Co** is a modern, AI-powered media streaming platform that enables users to upload and view videos with integrated AI chat assistance and security monitoring. Built with microservices architecture, it's designed to run seamlessly across multiple cloud providers.
+**Boring Paper Co** is a modern, AI-powered business platform that combines document management, AI chat assistance, and security monitoring into a unified web application. Built with microservices architecture, it's designed to run seamlessly across multiple cloud providers.
 
-## 🎯 What Does Boring Media Co Do?
+## 🎯 What Does Boring Paper Co Do?
 
-### 🎬 **Video Streaming & Upload**
-- **Video Upload & Storage**: Secure video upload with support for multiple video formats
-- **Streaming Platform**: High-performance video streaming with adaptive playback
-- **Video Library**: Organize and manage your video collection with advanced search capabilities
+### 📄 **Document Management & Processing**
+- **File Upload & Storage**: Secure document upload with support for multiple file types
+- **AI-Powered Analysis**: Intelligent document processing using local AI models
+- **Search & Organization**: Advanced search capabilities across your document library
 
 ### 🤖 **AI Chat Assistant**
 - **Intelligent Conversations**: Chat with an AI assistant powered by Ollama's tinyllama:1.1b-chat model
-- **Context-Aware Responses**: AI that understands your business context and video content
+- **Context-Aware Responses**: AI that understands your business context and documents
 - **Local AI Processing**: Privacy-focused AI that runs entirely on your infrastructure
 
 
 ## 🏗️ Architecture Overview
 
-Boring Media Co is built using a **microservices architecture** with 5 core services:
+Boring Paper Co is built using a **microservices architecture** with 5 core services:
 
 | Service | Purpose | Technology |
 |---------|---------|------------|
 | **UI** | React frontend with NGINX proxy | React, Vite, NGINX |
-| **SDK** | Media streaming API and business logic | Go, Echo framework |
+| **SDK** | Core business logic and API | Go, Echo framework |
 | **ContainerXDR** | Security monitoring & terminal | Go, WebSocket support |
 | **AI Chat** | AI conversation interface | Go, Ollama integration |
 | **Ollama** | Local AI model inference | Ollama, tinyllama:1.1b-chat model |
